@@ -64,8 +64,9 @@
         <p>{{ currentDish.price }}</p>
         <p>{{ currentDish.description }}</p>
         <p>Portion size: {{ currentDish.portion_size }}</p>
-        <vue-number-input v-model="value" :min="1" inline controls></vue-number-input>
-        <button>Add to Cart</button>
+        <p>Quantity:</p>
+        <input type="number" v-model="currentDishQuantity" :min="1" inline controls />
+        <button v-on:click="addToCart(currentDish)">Add to Cart</button>
         <button>Close</button>
       </form>
     </dialog>
@@ -81,7 +82,7 @@ export default {
       user: {},
       city: "",
       currentDish: {},
-      currentDishQuantity: 0,
+      currentDishQuantity: 1,
     };
   },
   created: function() {
