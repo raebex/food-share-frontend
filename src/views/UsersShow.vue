@@ -24,7 +24,7 @@
       <div v-for="dish in user.dishes" :key="dish.id">
         <h4>{{ dish.name }}</h4>
         <img :src="dish.image_url" :alt="dish.name" />
-        <p>{{ dish.price }}</p>
+        <p>{{ dish.price | currency }}</p>
         <button v-if="ownProfile()" v-on:click="showUpdateDish(dish)">Edit</button>
         <button v-else v-on:click="showDish(dish)">More info</button>
       </div>
@@ -72,7 +72,7 @@
       <form method="dialog">
         <h3>{{ currentDish.name }}</h3>
         <img :src="currentDish.image_url" :alt="currentDish.name" />
-        <p>{{ currentDish.price }}</p>
+        <p>{{ currentDish.price | currency }}</p>
         <p>{{ currentDish.description }}</p>
         <p>Portion size: {{ currentDish.portion_size }}</p>
         <p>Quantity:</p>
