@@ -20,6 +20,7 @@
     </div>
 
     <div v-if="user.chef">
+      <router-link v-if="ownProfile()" to="/dishes/new">Create new dish</router-link>
       <div v-for="dish in user.dishes" :key="dish.id">
         <h4>{{ dish.name }}</h4>
         <img :src="dish.image_url" :alt="dish.name" />
@@ -32,6 +33,11 @@
     <dialog v-if="user.chef && ownProfile()">
       <form method="dialog">
         <h3>Edit Dish</h3>
+        <ul>
+          <li class="text-danger" v-for="error in errors" v-bind:key="error">
+            {{ error }}
+          </li>
+        </ul>
         <div class="form-group">
           <label>Image URL:</label>
           <input type="text" v-model="currentDish.image_url" />
@@ -51,6 +57,10 @@
         <div class="form-group">
           <label>Portion Size:</label>
           <input type="text" v-model="currentDish.portion_size" />
+        </div>
+        <div class="form-group">
+          <label>Featured</label>
+          <input type="checkbox" class="form-control" v-model="currentDish.featured" />
         </div>
         <button v-on:click="updateDish(currentDish)">Save</button>
         <button>Close</button>
@@ -83,6 +93,7 @@ export default {
       city: "",
       currentDish: {},
       currentDishQuantity: 1,
+      errors: [],
     };
   },
   created: function() {
@@ -108,6 +119,7 @@ export default {
         description: dish.description,
         price: dish.price,
         image_url: dish.image_url,
+        featured: dish.featured,
       };
 
       axios
@@ -132,6 +144,7 @@ export default {
         })
         .catch(error => {
           console.log(error.response.data.errors);
+          this.errors = error.response.data.errors;
         });
     },
   },

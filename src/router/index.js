@@ -6,6 +6,7 @@ import Logout from "../views/Logout.vue";
 import UsersShow from "../views/UsersShow.vue";
 import UsersEdit from "../views/UsersEdit.vue";
 import Chefs from "../views/Chefs.vue";
+import DishesNew from "../views/DishesNew.vue";
 
 Vue.use(VueRouter);
 
@@ -39,6 +40,11 @@ const routes = [
     path: "/users/:id/edit",
     name: "users-edit",
     component: UsersEdit,
+  },
+  {
+    path: "/dishes/new",
+    name: "dishes-new",
+    component: DishesNew,
   },
 ];
 
