@@ -7,6 +7,7 @@ import UsersShow from "../views/UsersShow.vue";
 import UsersEdit from "../views/UsersEdit.vue";
 import Chefs from "../views/Chefs.vue";
 import DishesNew from "../views/DishesNew.vue";
+import CartedDishesIndex from "../views/CartedDishesIndex.vue";
 
 Vue.use(VueRouter);
 
@@ -45,6 +46,11 @@ const routes = [
     path: "/dishes/new",
     name: "dishes-new",
     component: DishesNew,
+  },
+  {
+    path: "/cart",
+    name: "carted-dishes-index",
+    component: CartedDishesIndex,
   },
 ];
 
