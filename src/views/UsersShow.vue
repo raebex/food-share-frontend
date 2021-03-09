@@ -63,6 +63,7 @@
           <input type="checkbox" class="form-control" v-model="currentDish.featured" />
         </div>
         <button v-on:click="updateDish(currentDish)">Save</button>
+        <button v-on:click="destroyDish(currentDish)">Delete</button>
         <button>Close</button>
       </form>
     </dialog>
@@ -129,6 +130,18 @@ export default {
         })
         .catch(error => {
           console.log(error.response.data.errors);
+        });
+    },
+    destroyDish: function(dish) {
+      axios
+        .delete(`/api/dishes/${dish.id}`)
+        .then(response => {
+          console.log(response.data);
+          var index = this.user.dishes.indexOf(dish);
+          this.user.dishes.splice(index, 1);
+        })
+        .catch(error => {
+          console.log(error);
         });
     },
     addToCart: function(dish) {
