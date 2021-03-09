@@ -17,7 +17,9 @@
       <span v-for="cuisine in chef.cuisines" :key="cuisine.id">
         {{ cuisine.name }}
       </span>
-      <img :src="chef.image_url" :alt="chef.name" />
+      <router-link :to="`/users/${chef.id}`">
+        <img :src="chef.image_url" :alt="chef.name" />
+      </router-link>
       <img :src="chef.featured_dish.image_url" :alt="chef.featured_dish.name" />
     </div>
   </div>

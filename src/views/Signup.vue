@@ -8,8 +8,12 @@
         </li>
       </ul>
       <div class="form-group">
-        <label>Name:</label>
-        <input type="text" class="form-control" v-model="name" />
+        <label>First Name:</label>
+        <input type="text" class="form-control" v-model="firstName" />
+      </div>
+      <div class="form-group">
+        <label>Last Name:</label>
+        <input type="text" class="form-control" v-model="lastName" />
       </div>
       <div class="form-group">
         <label>Email:</label>
@@ -23,6 +27,10 @@
         <label>Password confirmation:</label>
         <input type="password" class="form-control" v-model="passwordConfirmation" />
       </div>
+      <div class="form-group">
+        <label>Are you a chef?</label>
+        <input type="checkbox" class="form-control" v-model="chef" />
+      </div>
       <input type="submit" class="btn btn-primary" value="Submit" />
     </form>
   </div>
@@ -34,20 +42,24 @@ import axios from "axios";
 export default {
   data: function() {
     return {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       passwordConfirmation: "",
+      chef: "",
       errors: [],
     };
   },
   methods: {
     submit: function() {
       var params = {
-        name: this.name,
+        first_name: this.firstName,
+        last_name: this.lastName,
         email: this.email,
         password: this.password,
         password_confirmation: this.passwordConfirmation,
+        chef: this.chef,
       };
       axios
         .post("/api/users", params)
