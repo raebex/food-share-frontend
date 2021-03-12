@@ -1,12 +1,12 @@
 <template>
   <div class="order-show">
     <h1>Order #{{ order.id }}</h1>
-    <p>Order placed at: {{ order.created_at }}</p>
+    <p>Order placed at: {{ $parent.formattedDate(order.created_at) }}</p>
     <p>Subtotal: {{ order.subtotal }}</p>
     <p>Tax: {{ order.tax }}</p>
     <p>Total: {{ order.total }}</p>
     <p>Status: {{ order.status }}</p>
-    <p>Ready Time: {{ order.ready_time }}</p>
+    <p>Ready Time: {{ $parent.formattedDate(order.ready_time) }}</p>
     <p v-if="order.delivery">Delivery</p>
     <p v-else>Pick up</p>
 

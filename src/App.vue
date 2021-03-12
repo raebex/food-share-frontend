@@ -43,6 +43,8 @@
 </style>
 
 <script>
+import moment from "moment";
+
 export default {
   methods: {
     isLoggedIn: function() {
@@ -50,6 +52,12 @@ export default {
     },
     getUserId: function() {
       return localStorage.user_id;
+    },
+    formattedDate: function(date) {
+      return moment(date).format("MMM D, YYYY h:mm A");
+    },
+    formattedTime: function(time) {
+      return moment(time).format("h:mm A");
     },
   },
 };

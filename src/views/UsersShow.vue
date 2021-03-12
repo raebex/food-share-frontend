@@ -5,21 +5,31 @@
       <img :src="user.image_url" :alt="user.first_name" />
       <p>City</p>
       <p>{{ user.bio }}</p>
-      <router-link v-if="ownProfile()" :to="`/users/${user.id}/edit`">Edit</router-link>
+      <router-link v-if="ownProfile()" :to="`/users/${user.id}/edit`">Edit Profile</router-link>
       <div v-if="user.chef">
         <span v-for="cuisine in user.cuisines" :key="cuisine.id">
           {{ cuisine.name }}
         </span>
         <div>
+          <h3>Hours</h3>
           <div v-for="hour in user.preorder_hours" :key="hour.id">
-            <span>{{ hour.day_of_week }}</span>
-            <span>{{ hour.open }} to {{ hour.close }}</span>
+            <span>{{ hour.day_of_week }}: </span>
+            <span>{{ $parent.formattedTime(hour.open) }} to {{ $parent.formattedTime(hour.close) }}</span>
           </div>
+
+          <!-- <p>Create order for:</p>
+          <select id="orderDay" v-model="selectedDay">
+            <option v-for="hour in user.preorder_hours" :key="hour.id">{{ hour.day_of_week }}</option>
+          </select>
+          <select id="orderTime" v-model="selectedTime">
+            <option>{{ selectedDay.open }}</option>
+          </select> -->
         </div>
       </div>
     </div>
 
     <div v-if="user.chef">
+      <h3>Dishes</h3>
       <router-link v-if="ownProfile()" to="/dishes/new">Create new dish</router-link>
       <div v-for="dish in user.dishes" :key="dish.id">
         <h4>{{ dish.name }}</h4>

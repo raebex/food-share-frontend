@@ -4,7 +4,7 @@
       <li>
         <router-link :to="`/orders/${order.id}`">
           <h3>Order # {{ order.id }}</h3>
-          <p>{{ order.created_at }}</p>
+          <p>{{ $parent.formattedDate(order.created_at) }}</p>
           <p>{{ order.status }}</p>
           <p>{{ order.total }}</p>
         </router-link>
