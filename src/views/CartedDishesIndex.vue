@@ -2,11 +2,16 @@
   <div class="carted-dishes-index">
     <h1>Cart</h1>
     <div v-if="cartedDishes.length">
+      <p>
+        Order from chef:
+        <router-link :to="`/users/${cartedDishes[0].chef.id}`">
+          {{ cartedDishes[0].chef.first_name }}
+        </router-link>
+      </p>
       <ul v-if="cartedDishes.length">
         <li v-for="cartedDish in cartedDishes" :key="cartedDish.id">
           <h3>{{ cartedDish.dish.name }}</h3>
           <img :src="cartedDish.dish.image_url" :alt="cartedDish.dish.name" />
-          <p>Chef: <router-link :to="`/users/${cartedDish.chef.id}`">{{ cartedDish.chef.first_name }}</router-link></p>
           <p>Quantity</p>
           <div>
             <button v-on:click="updateQuantity(cartedDish, 'subtract')">-</button>
@@ -17,6 +22,7 @@
         </li>
       </ul>
       <p>Subtotal: {{ subtotal | currency }}</p>
+      <button>Place Order</button>
     </div>
 
     <div v-else>Nothing in your shopping cart</div>
