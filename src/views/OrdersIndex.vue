@@ -26,6 +26,6 @@ export default {
     axios.get("/api/orders").then(response => {
       this.orders = response.data;
     });
-  }
+  },
 };
 </script>
