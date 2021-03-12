@@ -4,8 +4,8 @@
     <div v-if="cartedDishes.length">
       <p>
         Order from chef:
-        <router-link :to="`/users/${cartedDishes[0].chef.id}`">
-          {{ cartedDishes[0].chef.first_name }}
+        <router-link :to="`/users/${chef.id}`">
+          {{ chef.first_name }}
         </router-link>
       </p>
       <ul v-if="cartedDishes.length">
@@ -22,7 +22,7 @@
         </li>
       </ul>
       <p>Subtotal: {{ subtotal | currency }}</p>
-      <button>Place Order</button>
+      <button v-on:click="createOrder()">Place Order</button>
     </div>
 
     <div v-else>Nothing in your shopping cart</div>
@@ -35,6 +35,9 @@ import axios from "axios";
 export default {
   data: function() {
     return {
+      chef: {},
+      delivery: false,
+      ready_time: "1pm",
       cartedDishes: [],
       subtotal: 0,
     };
@@ -42,6 +45,7 @@ export default {
   created: function() {
     axios.get("/api/carted_dishes").then(response => {
       this.cartedDishes = response.data;
+      this.chef = this.cartedDishes[0].chef;
       this.updateSubtotal();
     });
   },
@@ -79,6 +83,18 @@ export default {
 
           this.updateSubtotal();
         }
+      });
+    },
+    createOrder: function() {
+      var params = {
+        subtotal: this.subtotal,
+        delivery: this.delivery,
+        ready_time: this.ready_time,
+      };
+
+      axios.post("/api/orders", params).then(response => {
+        console.log(response.data);
+        this.$router.push(`/orders/${response.data.id}`);
       });
     },
   },
