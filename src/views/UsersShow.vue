@@ -77,7 +77,10 @@
         <p>Portion size: {{ currentDish.portion_size }}</p>
         <p>Quantity:</p>
         <input type="number" v-model="currentDishQuantity" :min="1" inline controls />
-        <button v-on:click="addToCart(currentDish)">Add to Cart</button>
+        <button v-if="$parent.isLoggedIn()" v-on:click="addToCart(currentDish)">Add to Cart</button>
+        <button v-else>
+          <router-link to="/login">Add to Cart</router-link>
+        </button>
         <button>Close</button>
       </form>
     </dialog>

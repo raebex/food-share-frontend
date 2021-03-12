@@ -6,6 +6,7 @@
         <li v-for="cartedDish in cartedDishes" :key="cartedDish.id">
           <h3>{{ cartedDish.dish.name }}</h3>
           <img :src="cartedDish.dish.image_url" :alt="cartedDish.dish.name" />
+          <p>Chef: <router-link :to="`/users/${cartedDish.chef.id}`">{{ cartedDish.chef.first_name }}</router-link></p>
           <p>Quantity</p>
           <div>
             <button v-on:click="updateQuantity(cartedDish, 'subtract')">-</button>
@@ -35,19 +36,22 @@ export default {
   created: function() {
     axios.get("/api/carted_dishes").then(response => {
       this.cartedDishes = response.data;
-      this.cartedDishes.forEach(cartedDish => {
-        this.subtotal += cartedDish.subtotal;
-      });
+      this.updateSubtotal();
     });
   },
   methods: {
+    updateSubtotal: function() {
+      this.subtotal = 0;
+      this.cartedDishes.forEach(cartedDish => {
+        this.subtotal += parseFloat(cartedDish.subtotal);
+      });
+    },
     updateQuantity: function(dish, operator) {
       var params = {
         quantity: operator === "add" ? dish.quantity + 1 : dish.quantity - 1,
       };
 
       axios.patch(`api/carted_dishes/${dish.id}`, params).then(response => {
-        console.log(response.data);
         var newQuantity = response.data.quantity;
         var index = this.cartedDishes.indexOf(dish);
 
@@ -57,6 +61,7 @@ export default {
             .then(response => {
               console.log(response.data);
               this.cartedDishes.splice(index, 1);
+              this.updateSubtotal();
             })
             .catch(error => {
               console.log(error);
@@ -65,6 +70,8 @@ export default {
           var newSubtotal = response.data.subtotal;
           this.cartedDishes[index].subtotal = newSubtotal;
           this.cartedDishes[index].quantity = newQuantity;
+
+          this.updateSubtotal();
         }
       });
     },
