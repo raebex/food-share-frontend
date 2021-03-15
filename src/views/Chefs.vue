@@ -80,8 +80,12 @@ export default {
 
       while (index < 7) {
         var day = {
-          day: moment().add(index, "days").format("dddd"),
-          date: moment().add(index, "days").format("MMMM Do")
+          day: moment()
+            .add(index, "days")
+            .format("dddd"),
+          date: moment()
+            .add(index, "days")
+            .format("MMMM Do"),
         };
         this.preorderDays.push(day);
         index += 1;
