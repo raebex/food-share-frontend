@@ -64,8 +64,31 @@ export default {
       axios
         .post("/api/users", params)
         .then(response => {
-          console.log(response.data);
-          this.$router.push("/login");
+          var newUser = response.data;
+
+          var loginParams = {
+            email: newUser.email,
+            password: params.password,
+          };
+          axios
+            .post("/api/sessions", loginParams)
+            .then(response => {
+              axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.jwt;
+              localStorage.setItem("jwt", response.data.jwt);
+              localStorage.setItem("user_id", response.data.user_id);
+
+              if (response.data.chef) {
+                this.$router.push(`/users/${newUser.id}/edit`);
+              } else {
+                this.$router.push("/");
+              }
+            })
+            .catch(error => {
+              console.log(error.response);
+              this.errors = ["Invalid email or password."];
+              this.email = "";
+              this.password = "";
+            });
         })
         .catch(error => {
           this.errors = error.response.data.errors;

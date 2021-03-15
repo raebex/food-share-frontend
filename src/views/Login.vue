@@ -45,7 +45,7 @@ export default {
           localStorage.setItem("user_id", response.data.user_id);
 
           if (response.data.chef) {
-            this.$router.push(`/users/${this.$parent.getUserId()}`);
+            this.$router.push("/orders");
           } else {
             this.$router.push("/");
           }
