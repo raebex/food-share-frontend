@@ -44,8 +44,8 @@ export default {
   },
   created: function() {
     axios.get("/api/carted_dishes").then(response => {
-      this.cartedDishes = response.data;
-      this.chef = this.cartedDishes[0].chef;
+      this.cartedDishes = response.data.cart;
+      this.chef = response.data.chef;
       this.updateSubtotal();
     });
   },
