@@ -49,6 +49,56 @@
       </div>
       <input type="submit" class="btn btn-primary" value="Save" />
     </form>
+
+    <div v-if="user.chef">
+      <h3>Cuisines</h3>
+      <span v-for="cuisine in user.cuisines" :key="cuisine.name">
+        {{ cuisine.name }}
+        <button v-on:click="deleteCuisine(cuisine)">x</button>
+      </span>
+      <input
+        type="search"
+        class="form-control"
+        placeholder="Search"
+        list="cuisineList"
+        v-model="newCuisine"
+      />
+      <datalist id="cuisineList">
+        <option v-for="cuisine in cuisineOptions" :key="cuisine.id">
+          {{ cuisine.name }}
+        </option>
+      </datalist>
+
+      <button v-on:click="addCuisine()">Add Cuisine</button>
+      <h3>Hours</h3>
+      <div v-for="hour in user.preorder_hours" :key="hour.id">
+        <span>{{ hour.day_of_week }}: </span>
+        <span>{{ $parent.formattedTime(hour.open) }} to {{ $parent.formattedTime(hour.close) }}</span>
+        <button v-on:click="deleteHour(hour)">x</button>
+      </div>
+      <select id="newDay">
+        <option>Monday</option>
+        <option>Tuesday</option>
+        <option>Wednesday</option>
+        <option>Thursday</option>
+        <option>Friday</option>
+        <option>Saturday</option>
+        <option>Sunday</option>
+      </select>
+
+      Open Time:
+      <select id="newOpen">
+        <option>Monday</option>
+        <option>Tuesday</option>
+        <option>Wednesday</option>
+        <option>Thursday</option>
+        <option>Friday</option>
+        <option>Saturday</option>
+        <option>Sunday</option>
+      </select>
+
+      <button v-on:click="addHour()">Add hour</button>
+    </div>
   </div>
 </template>
 
@@ -59,12 +109,22 @@ export default {
   data: function() {
     return {
       user: {},
+      newCuisine: "",
+      cuisineOptions: [],
       errors: [],
     };
   },
   created: function() {
     axios.get(`/api/users/${this.$route.params.id}`).then(response => {
       this.user = response.data;
+
+      axios.get("/api/cuisines").then(response => {
+        this.cuisineOptions = response.data.filter(cuisine => {
+          console.log(cuisine);
+          console.log(this.user.cuisines.indexOf(cuisine));
+            return this.user.cuisines.indexOf(cuisine) < 0;
+        });
+      });
     });
   },
   methods: {
@@ -81,15 +141,33 @@ export default {
         bio: this.user.bio,
         chef: this.user.chef,
       };
-      axios
-        .patch(`/api/users/${this.user.id}`, params)
-        .then(response => {
-          console.log(response.data);
-          this.$router.push(`/users/${this.user.id}`);
-        })
-        .catch(error => {
-          this.errors = error.response.data.errors;
-        });
+
+      params.cuisine_ids = this.user.cuisines.map(option => option.id);
+      console.log(params);
+
+      // axios
+      //   .patch(`/api/users/${this.user.id}`, params)
+      //   .then(response => {
+      //     console.log(response.data);
+      //     this.$router.push(`/users/${this.user.id}`);
+      //   })
+      //   .catch(error => {
+      //     this.errors = error.response.data.errors;
+      //   });
+    },
+    addCuisine: function() {
+      var newCuisineObject = {
+        name: this.newCuisine,
+      };
+
+      newCuisineObject.id = this.cuisineOptions.find(option => option.name === this.newCuisine).id;
+
+      this.user.cuisines.push(newCuisineObject);
+      this.newCuisine = "";
+    },
+    deleteCuisine: function(cuisine) {
+      var index = this.user.cuisines.indexOf(cuisine);
+      this.user.cuisines.splice(index, 1);
     },
   },
 };
