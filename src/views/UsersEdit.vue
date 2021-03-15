@@ -47,23 +47,27 @@
         <label>Chef?</label>
         <input type="checkbox" class="form-control" v-model="user.chef" />
       </div>
+
+      <div v-if="user.chef">
+        <h3>Cuisines</h3>
+        <li v-for="cuisine in cuisines" :key="cuisine.name">
+          <input type="checkbox" :id="cuisine.name" :value="cuisine.id" v-model="selectedCuisineIds" />
+          <label :for="cuisine.name">{{ cuisine.name }}</label>
+        </li>
+      </div>
       <input type="submit" class="btn btn-primary" value="Save" />
     </form>
 
     <div v-if="user.chef">
-      <h3>Cuisines</h3>
-      <li v-for="cuisine in cuisines" :key="cuisine.name">
-        <input type="checkbox" :id="cuisine.name" :value="cuisine.id" v-model="selectedCuisineIds" />
-        <label :for="cuisine.name">{{ cuisine.name }}</label>
-      </li>
-
       <h3>Hours</h3>
       <div v-for="hour in user.preorder_hours" :key="hour.id">
-        <span>{{ hour.day_of_week }}: </span>
+        <span>{{ hour.day_of_week }}:</span>
         <span>{{ $parent.formattedTime(hour.open) }} to {{ $parent.formattedTime(hour.close) }}</span>
-        <button v-on:click="deleteHour(hour)">x</button>
+        <button v-on:click="deletePreorderHour(hour)">x</button>
       </div>
-      <select id="newDay">
+
+      Day:
+      <select v-model="newDay">
         <option>Monday</option>
         <option>Tuesday</option>
         <option>Wednesday</option>
@@ -74,14 +78,13 @@
       </select>
 
       Open Time:
-      <select id="newOpen">
-        <option>Monday</option>
-        <option>Tuesday</option>
-        <option>Wednesday</option>
-        <option>Thursday</option>
-        <option>Friday</option>
-        <option>Saturday</option>
-        <option>Sunday</option>
+      <select v-model="newOpen">
+        <option>1pm</option>
+      </select>
+
+      Close Time:
+      <select v-model="newClose">
+        <option>10pm</option>
       </select>
 
       <button v-on:click="addHour()">Add hour</button>
@@ -99,6 +102,9 @@ export default {
       selectedCuisineIds: [],
       cuisines: [],
       errors: [],
+      newDay: "Monday",
+      newOpen: "1pm",
+      newClose: "10pm",
     };
   },
   created: function() {
@@ -140,19 +146,17 @@ export default {
           this.errors = error.response.data.errors;
         });
     },
-    addCuisine: function() {
-      var newCuisineObject = {
-        name: this.newCuisine,
-      };
-
-      newCuisineObject.id = this.cuisineOptions.find(option => option.name === this.newCuisine).id;
-
-      this.user.cuisines.push(newCuisineObject);
-      this.newCuisine = "";
-    },
-    deleteCuisine: function(cuisine) {
-      var index = this.user.cuisines.indexOf(cuisine);
-      this.user.cuisines.splice(index, 1);
+    deletePreorderHour: function(hour) {
+      axios
+        .delete(`/api/preorder_hours/${hour.id}`)
+        .then(response => {
+          console.log(response.data);
+          var index = this.user.preorder_hours.indexOf(hour);
+          this.user.preorder_hours.splice(index, 1);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
   },
 };
