@@ -22,6 +22,8 @@
         </li>
       </ul>
       <p>Subtotal: {{ subtotal | currency }}</p>
+      <p>Tax (9%): {{ tax | currency }}</p>
+      <p>Total: {{ total | currency }}</p>
       <button v-on:click="createOrder()">Place Order</button>
     </div>
 
@@ -40,21 +42,25 @@ export default {
       ready_time: "1pm",
       cartedDishes: [],
       subtotal: 0,
+      tax: 0,
+      total: 0,
     };
   },
   created: function() {
     axios.get("/api/carted_dishes").then(response => {
       this.cartedDishes = response.data.cart;
       this.chef = response.data.chef;
-      this.updateSubtotal();
+      this.updateCosts();
     });
   },
   methods: {
-    updateSubtotal: function() {
+    updateCosts: function() {
       this.subtotal = 0;
       this.cartedDishes.forEach(cartedDish => {
         this.subtotal += parseFloat(cartedDish.subtotal);
       });
+      this.tax = this.subtotal * 0.09;
+      this.total = this.tax + this.subtotal;
     },
     updateQuantity: function(dish, operator) {
       var params = {
@@ -71,7 +77,7 @@ export default {
             .then(response => {
               console.log(response.data);
               this.cartedDishes.splice(index, 1);
-              this.updateSubtotal();
+              this.updateCosts();
             })
             .catch(error => {
               console.log(error);
@@ -81,7 +87,7 @@ export default {
           this.cartedDishes[index].subtotal = newSubtotal;
           this.cartedDishes[index].quantity = newQuantity;
 
-          this.updateSubtotal();
+          this.updateCosts();
         }
       });
     },
