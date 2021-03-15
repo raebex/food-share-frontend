@@ -52,24 +52,11 @@
 
     <div v-if="user.chef">
       <h3>Cuisines</h3>
-      <span v-for="cuisine in user.cuisines" :key="cuisine.name">
-        {{ cuisine.name }}
-        <button v-on:click="deleteCuisine(cuisine)">x</button>
-      </span>
-      <input
-        type="search"
-        class="form-control"
-        placeholder="Search"
-        list="cuisineList"
-        v-model="newCuisine"
-      />
-      <datalist id="cuisineList">
-        <option v-for="cuisine in cuisineOptions" :key="cuisine.id">
-          {{ cuisine.name }}
-        </option>
-      </datalist>
+      <li v-for="cuisine in cuisines" :key="cuisine.name">
+        <input type="checkbox" :id="cuisine.name" :value="cuisine.id" v-model="selectedCuisineIds" />
+        <label :for="cuisine.name">{{ cuisine.name }}</label>
+      </li>
 
-      <button v-on:click="addCuisine()">Add Cuisine</button>
       <h3>Hours</h3>
       <div v-for="hour in user.preorder_hours" :key="hour.id">
         <span>{{ hour.day_of_week }}: </span>
@@ -109,25 +96,25 @@ export default {
   data: function() {
     return {
       user: {},
-      newCuisine: "",
-      cuisineOptions: [],
+      selectedCuisineIds: [],
+      cuisines: [],
       errors: [],
     };
   },
   created: function() {
     axios.get(`/api/users/${this.$route.params.id}`).then(response => {
       this.user = response.data;
-
-      axios.get("/api/cuisines").then(response => {
-        this.cuisineOptions = response.data.filter(cuisine => {
-          console.log(cuisine);
-          console.log(this.user.cuisines.indexOf(cuisine));
-            return this.user.cuisines.indexOf(cuisine) < 0;
-        });
-      });
+      this.selectedCuisineIds = this.user.cuisines.map(cuisine => cuisine.id);
     });
+
+    this.getCuisines();
   },
   methods: {
+    getCuisines: function() {
+      axios.get("/api/cuisines").then(response => {
+        this.cuisines = response.data;
+      });
+    },
     update: function() {
       var params = {
         first_name: this.user.first_name,
@@ -140,20 +127,18 @@ export default {
         address: this.user.address,
         bio: this.user.bio,
         chef: this.user.chef,
+        cuisine_ids: this.selectedCuisineIds,
       };
 
-      params.cuisine_ids = this.user.cuisines.map(option => option.id);
-      console.log(params);
-
-      // axios
-      //   .patch(`/api/users/${this.user.id}`, params)
-      //   .then(response => {
-      //     console.log(response.data);
-      //     this.$router.push(`/users/${this.user.id}`);
-      //   })
-      //   .catch(error => {
-      //     this.errors = error.response.data.errors;
-      //   });
+      axios
+        .patch(`/api/users/${this.user.id}`, params)
+        .then(response => {
+          console.log(response.data);
+          this.$router.push(`/users/${this.user.id}`);
+        })
+        .catch(error => {
+          this.errors = error.response.data.errors;
+        });
     },
     addCuisine: function() {
       var newCuisineObject = {
