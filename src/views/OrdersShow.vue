@@ -5,7 +5,6 @@
     <p>Subtotal: {{ order.subtotal }}</p>
     <p>Tax: {{ order.tax }}</p>
     <p>Total: {{ order.total }}</p>
-    <p>Status: {{ order.status }}</p>
     <p>Ready Time: {{ $parent.formattedDate(order.ready_time) }}</p>
     <p v-if="order.delivery">Delivery</p>
     <p v-else>Pick up</p>
