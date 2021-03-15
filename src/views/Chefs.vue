@@ -1,5 +1,6 @@
 <template>
   <div class="chefs">
+    Search by cuisine:
     <input
       type="search"
       id="form1"
@@ -12,15 +13,25 @@
       <option v-for="cuisine in cuisines" :key="cuisine.id">{{ cuisine.name }}</option>
     </datalist>
 
-    <div class="chef" v-for="chef in filterBy(chefs, cuisineFilter)" :key="chef.id">
-      <h3>{{ chef.first_name }}</h3>
-      <span v-for="cuisine in chef.cuisines" :key="cuisine.id">
-        {{ cuisine.name }}
-      </span>
-      <router-link :to="`/users/${chef.id}`">
-        <img :src="chef.image_url" :alt="chef.name" />
-      </router-link>
-      <img :src="chef.featured_dish.image_url" :alt="chef.featured_dish.name" />
+    Order day:
+    <select v-model="preorderDay">
+      <option v-for="day in preorderDays" :key="day.date" :value="day.day">{{ day.day }} {{ day.date }}</option>
+    </select>
+
+    <div class="chef" v-for="chef in filterBy(filterBy(chefs, cuisineFilter), preorderDay)" :key="chef.id">
+      <div v-if="chefs.length > 0">
+        <router-link :to="`/users/${chef.id}`">
+          <h3>{{ chef.first_name }}</h3>
+          <span v-for="cuisine in chef.cuisines" :key="cuisine.id">
+            {{ cuisine.name }}
+          </span>
+          <img :src="chef.image_url" :alt="chef.name" />
+          <img :src="chef.featured_dish.image_url" :alt="chef.featured_dish.name" />
+        </router-link>
+      </div>
+      <div v-else>
+        There are no chefs that meet your criteria.
+      </div>
     </div>
   </div>
 </template>
@@ -35,6 +46,7 @@
 <script>
 import axios from "axios";
 import Vue2Filters from "vue2-filters";
+import moment from "moment";
 
 export default {
   mixins: [Vue2Filters.mixin],
@@ -43,16 +55,38 @@ export default {
       chefs: [],
       cuisines: [],
       cuisineFilter: "",
+      preorderDays: [],
+      preorderDay: moment().format("dddd"),
     };
   },
   created: function() {
-    axios.get("/api/users").then(response => {
-      this.chefs = response.data;
-    });
+    this.getChefs();
+    this.getCuisines();
+    this.populatePreorderDays();
+  },
+  methods: {
+    getChefs: function() {
+      axios.get("/api/users").then(response => {
+        this.chefs = response.data;
+      });
+    },
+    getCuisines: function() {
+      axios.get("/api/cuisines").then(response => {
+        this.cuisines = response.data;
+      });
+    },
+    populatePreorderDays: function() {
+      var index = 0;
 
-    axios.get("/api/cuisines").then(response => {
-      this.cuisines = response.data;
-    });
+      while (index < 7) {
+        var day = {
+          day: moment().add(index, "days").format("dddd"),
+          date: moment().add(index, "days").format("MMMM Do")
+        };
+        this.preorderDays.push(day);
+        index += 1;
+      }
+    },
   },
 };
 </script>
