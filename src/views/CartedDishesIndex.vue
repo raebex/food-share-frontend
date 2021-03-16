@@ -21,6 +21,12 @@
           <p>{{ cartedDish.subtotal | currency }}</p>
         </li>
       </ul>
+      <p>Order for: {{ day }}, {{ date }}</p>
+      <p>Choose time:</p>
+      <select v-model="chosenTime">
+        <option v-for="hour in hours" :key="hour">{{ hour }}</option>
+      </select>
+
       <p>Subtotal: {{ subtotal | currency }}</p>
       <p>Tax (9%): {{ tax | currency }}</p>
       <p>Total: {{ total | currency }}</p>
@@ -33,17 +39,21 @@
 
 <script>
 import axios from "axios";
+import moment from "moment";
 
 export default {
   data: function() {
     return {
       chef: {},
       delivery: false,
-      ready_time: "1pm",
       cartedDishes: [],
       subtotal: 0,
       tax: 0,
       total: 0,
+      hours: [],
+      day: localStorage.getItem("orderDay"),
+      date: localStorage.getItem("orderDate"),
+      chosenTime: "",
     };
   },
   created: function() {
@@ -51,9 +61,28 @@ export default {
       this.cartedDishes = response.data.cart;
       this.chef = response.data.chef;
       this.updateCosts();
+      this.populatePreorderHours();
     });
   },
   methods: {
+    populatePreorderHours: function() {
+      var today = this.chef.preorder_hours.find(preorder_hour => {
+        return preorder_hour.day_of_week === this.day;
+      });
+      var open = moment(today.open);
+      var close = moment(today.close);
+      var timeRange = moment.duration(open.diff(close));
+      var index = 0;
+      var totalNumHours = Math.abs(timeRange._data.hours);
+
+      while (index < totalNumHours) {
+        var nextHour = moment(today.open)
+          .add(index, "hours")
+          .format("h:mmA");
+        this.hours.push(nextHour);
+        index++;
+      }
+    },
     updateCosts: function() {
       this.subtotal = 0;
       this.cartedDishes.forEach(cartedDish => {
@@ -95,12 +124,14 @@ export default {
       var params = {
         subtotal: this.subtotal,
         delivery: this.delivery,
-        ready_time: this.ready_time,
+        ready_time: `${this.date} ${this.chosenTime}`,
       };
 
       axios.post("/api/orders", params).then(response => {
         console.log(response.data);
         this.$router.push(`/orders/${response.data.id}`);
+        localStorage.removeItem("orderDay");
+        localStorage.removeItem("orderDate");
       });
     },
   },

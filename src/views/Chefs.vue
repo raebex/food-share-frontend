@@ -14,7 +14,7 @@
     </datalist>
 
     Order day:
-    <select v-model="preorderDay">
+    <select v-on:change="setOrderDay" v-model="preorderDay">
       <option v-for="day in preorderDays" :key="day.date" :value="day.day">{{ day.day }} {{ day.date }}</option>
     </select>
 
@@ -56,15 +56,25 @@ export default {
       cuisines: [],
       cuisineFilter: "",
       preorderDays: [],
-      preorderDay: moment().format("dddd"),
+      preorderDay: localStorage.getItem("orderDay") || moment().format("dddd"),
     };
   },
   created: function() {
     this.getChefs();
     this.getCuisines();
     this.populatePreorderDays();
+    this.setOrderDay();
   },
   methods: {
+    setOrderDay: function() {
+      localStorage.setItem("orderDay", this.preorderDay);
+      localStorage.setItem(
+        "orderDate",
+        moment()
+          .day(this.preorderDay)
+          .format("MMMM D")
+      );
+    },
     getChefs: function() {
       axios.get("/api/users").then(response => {
         this.chefs = response.data;
@@ -85,7 +95,7 @@ export default {
             .format("dddd"),
           date: moment()
             .add(index, "days")
-            .format("MMMM Do"),
+            .format("MMMM D"),
         };
         this.preorderDays.push(day);
         index += 1;
