@@ -79,15 +79,15 @@
 
       Open Time:
       <select v-model="newOpen">
-        <option>1pm</option>
+        <option v-for="time in timeOptions" :key="time">{{ time }}</option>
       </select>
 
       Close Time:
       <select v-model="newClose">
-        <option>10pm</option>
+        <option v-for="time in timeOptions" :key="time">{{ time }}</option>
       </select>
 
-      <button v-on:click="addHour()">Add hour</button>
+      <button v-on:click="addPreorderHour()">Add hour</button>
     </div>
   </div>
 </template>
@@ -101,10 +101,11 @@ export default {
       user: {},
       selectedCuisineIds: [],
       cuisines: [],
+      timeOptions: [],
       errors: [],
       newDay: "Monday",
-      newOpen: "1pm",
-      newClose: "10pm",
+      newOpen: "9:00AM",
+      newClose: "11:00PM",
     };
   },
   created: function() {
@@ -114,8 +115,28 @@ export default {
     });
 
     this.getCuisines();
+    this.createTimeOptions();
   },
   methods: {
+    createTimeOptions: function() {
+      var index = 1;
+
+      while (index <= 24) {
+        var time = index + ":00";
+
+        if (index < 12) {
+          time += "AM";
+        } else if (index === 12) {
+          time += "PM";
+        } else if (index === 24) {
+          time = "12:00AM";
+        } else if (index > 12) {
+          time = `${index - 12}:00PM`;
+        }
+        this.timeOptions.push(time);
+        index++;
+      }
+    },
     getCuisines: function() {
       axios.get("/api/cuisines").then(response => {
         this.cuisines = response.data;
@@ -144,6 +165,22 @@ export default {
         })
         .catch(error => {
           this.errors = error.response.data.errors;
+        });
+    },
+    addPreorderHour: function() {
+      var params = {
+        day_of_week: this.newDay,
+        open: this.newOpen,
+        close: this.newClose,
+      };
+
+      axios
+        .post("/api/preorder_hours", params)
+        .then(response => {
+          this.user.preorder_hours.push(response.data);
+        })
+        .catch(error => {
+          console.log(error.response.data.errors);
         });
     },
     deletePreorderHour: function(hour) {
