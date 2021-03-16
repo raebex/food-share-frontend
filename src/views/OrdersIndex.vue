@@ -5,7 +5,7 @@
         <router-link :to="`/orders/${order.id}`">
           <h3>Order # {{ order.id }}</h3>
           <p>{{ $parent.formattedDate(order.created_at) }}</p>
-          <p>{{ order.total }}</p>
+          <p>{{ order.total | currency }}</p>
           <p>From Chef {{ order.chef.first_name }}</p>
         </router-link>
       </li>
