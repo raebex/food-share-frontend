@@ -26,6 +26,12 @@
       <select v-model="chosenTime">
         <option v-for="hour in hours" :key="hour">{{ hour }}</option>
       </select>
+      <br />
+      <input type="radio" id="delivery" value="Delivery" v-model="delivery" />
+      <label for="delivery">Delivery</label>
+      <br />
+      <input type="radio" id="pickup" value="pickup" v-model="delivery" />
+      <label for="pickup">Pickup</label>
 
       <p>Subtotal: {{ subtotal | currency }}</p>
       <p>Tax (9%): {{ tax | currency }}</p>
