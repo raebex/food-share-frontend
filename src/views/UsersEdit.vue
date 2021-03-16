@@ -27,10 +27,10 @@
         <label>Password confirmation:</label>
         <input type="password" class="form-control" v-model="user.password_confirmation" />
       </div>
-      <div class="form-group">
-        <label>Image URL:</label>
-        <input type="text" class="form-control" v-model="user.image_url" />
+      <div>
+        Image: <input type="file" v-on:change="setFile($event)" ref="fileInput" />
       </div>
+
       <div class="form-group">
         <label>Phone number:</label>
         <input type="text" class="form-control" v-model="user.phone" />
@@ -119,6 +119,11 @@ export default {
     this.createTimeOptions();
   },
   methods: {
+    setFile: function(event) {
+      if (event.target.files.length > 0) {
+        this.user.image_url = event.target.files[0];
+      }
+    },
     createTimeOptions: function() {
       var index = 1;
 
@@ -144,22 +149,24 @@ export default {
       });
     },
     update: function() {
-      var params = {
-        first_name: this.user.first_name,
-        last_name: this.user.last_name,
-        email: this.user.email,
-        password: this.user.password,
-        password_confirmation: this.user.password_confirmation,
-        image_url: this.user.image_url,
-        phone: this.user.phone,
-        address: this.user.address,
-        bio: this.user.bio,
-        chef: this.user.chef,
-        cuisine_ids: this.selectedCuisineIds,
-      };
+      var formData = new FormData();
+      formData.append("first_name", this.user.first_name);
+      formData.append("last_name", this.user.last_name);
+      formData.append("image_url", this.user.image_url);
+      formData.append("email", this.user.email);
+      formData.append("password", this.user.password);
+      formData.append("password_confirmation", this.user.password_confirmation);
+      formData.append("phone", this.user.phone);
+      formData.append("address", this.user.address);
+      formData.append("bio", this.user.bio);
+      formData.append("chef", this.user.chef);
+
+      for (var i = 0; i < this.selectedCuisineIds.length; i++) {
+        formData.append("cuisine_ids[]", this.selectedCuisineIds[i]);
+      }
 
       axios
-        .patch(`/api/users/${this.user.id}`, params)
+        .patch(`/api/users/${this.user.id}`, formData)
         .then(response => {
           console.log(response.data);
           this.$router.push(`/users/${this.user.id}`);

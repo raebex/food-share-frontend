@@ -7,9 +7,8 @@
           {{ error }}
         </li>
       </ul>
-      <div class="form-group">
-        <label>Image URL:</label>
-        <input type="text" v-model="imageUrl" />
+      <div>
+        Image: <input type="file" v-on:change="setFile($event)" ref="fileInput" />
       </div>
       <div class="form-group">
         <label>Name:</label>
@@ -52,21 +51,25 @@ export default {
     };
   },
   methods: {
+    setFile: function(event) {
+      if (event.target.files.length > 0) {
+        this.imageUrl = event.target.files[0];
+      }
+    },
     createDish: function() {
-      var params = {
-        name: this.name,
-        image_url: this.imageUrl,
-        price: this.price,
-        description: this.description,
-        portion_size: this.portionSize,
-        featured: this.featured,
-      };
+      var formData = new FormData();
+      formData.append("name", this.name);
+      formData.append("image_url", this.imageUrl);
+      formData.append("price", this.price);
+      formData.append("description", this.description);
+      formData.append("portion_size", this.portionSize);
+      formData.append("featured", this.featured);
 
       axios
-        .post("/api/dishes", params)
+        .post("/api/dishes", formData)
         .then(response => {
           console.log(response.data);
-          this.$router.push("/");
+          this.$router.push(`/users/${this.user.id}`);
         })
         .catch(error => {
           console.log(error.response.data.errors);

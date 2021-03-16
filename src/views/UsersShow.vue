@@ -47,9 +47,9 @@
             {{ error }}
           </li>
         </ul>
-        <div class="form-group">
-          <label>Image URL:</label>
-          <input type="text" v-model="currentDish.image_url" />
+        <img :src="currentDish.image_url" alt="" />
+        <div>
+          Image: <input type="file" v-on:change="setFile($event)" ref="fileInput" />
         </div>
         <div class="form-group">
           <label>Name:</label>
@@ -107,6 +107,7 @@ export default {
       currentDish: {},
       currentDishQuantity: 1,
       errors: [],
+      newImage: "",
     };
   },
   created: function() {
@@ -115,6 +116,11 @@ export default {
     });
   },
   methods: {
+    setFile: function(event) {
+      if (event.target.files.length > 0) {
+        this.newImage = event.target.files[0];
+      }
+    },
     ownProfile: function() {
       return this.$parent.getUserId() == this.user.id;
     },
@@ -127,18 +133,19 @@ export default {
       document.querySelector("dialog").showModal();
     },
     updateDish: function(dish) {
-      var params = {
-        name: dish.name,
-        description: dish.description,
-        price: dish.price,
-        image_url: dish.image_url,
-        featured: dish.featured,
-      };
+      var formData = new FormData();
+      formData.append("name", dish.name);
+      formData.append("description", dish.description);
+      formData.append("price", dish.price);
+      formData.append("image_url", this.newImage);
+      formData.append("featured", dish.featured);
 
       axios
-        .patch(`/api/dishes/${dish.id}`, params)
+        .patch(`/api/dishes/${dish.id}`, formData)
         .then(response => {
           console.log("Dish updated.", response.data);
+          var index = this.user.dishes.indexOf(dish);
+          this.user.dishes[index].image_url = response.data.image_url;
         })
         .catch(error => {
           console.log(error.response.data.errors);
