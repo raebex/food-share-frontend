@@ -56,6 +56,7 @@
         </li>
       </div>
       <input type="submit" class="btn btn-primary" value="Save" />
+      <button v-on:click="destroyProfile()">Delete Profile</button>
     </form>
 
     <div v-if="user.chef">
@@ -194,6 +195,22 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    destroyProfile: function() {
+      if (confirm("Are you sure you want to delete your profile?")) {
+        axios
+          .delete(`/api/users/${this.user.id}`)
+          .then(response => {
+            console.log(response.data);
+            this.$router.push("/login");
+            delete axios.defaults.headers.common["Authorization"];
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("user_id");
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
     },
   },
 };
