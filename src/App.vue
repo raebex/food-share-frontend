@@ -54,10 +54,16 @@ export default {
       return localStorage.user_id;
     },
     formattedDate: function(date) {
-      return moment(date.replace("Z", "")).format("MMM D, YYYY h:mm A");
+      return moment
+        .parseZone(date)
+        .utc()
+        .format("MMM D, YYYY h:mm A");
     },
     formattedTime: function(time) {
-      return moment(time.replace("Z", "")).format("h:mm A");
+      return moment
+        .parseZone(time)
+        .utc()
+        .format("h:mm A");
     },
   },
 };
