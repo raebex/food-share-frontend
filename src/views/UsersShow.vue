@@ -4,7 +4,7 @@
       <h1>{{ user.first_name }} {{ user.last_name }}</h1>
       <router-link v-if="ownProfile()" :to="`/users/${user.id}/edit`">Edit Profile</router-link>
       <img :src="user.image_url" :alt="user.first_name" />
-      <p>City</p>
+      <p>{{ user.address.city }}, {{ user.address.state }}</p>
       <p>{{ user.bio }}</p>
       <div v-if="user.chef">
         <span v-for="cuisine in user.cuisines" :key="cuisine.id">
@@ -16,13 +16,6 @@
             <span>{{ hour.day_of_week }}: </span>
             <span>{{ $parent.formattedTime(hour.open) }} to {{ $parent.formattedTime(hour.close) }}</span>
           </div>
-          <!-- <p>Create order for:</p>
-          <select id="orderDay" v-model="selectedDay">
-            <option v-for="hour in user.preorder_hours" :key="hour.id">{{ hour.day_of_week }}</option>
-          </select>
-          <select id="orderTime" v-model="selectedTime">
-            <option>{{ selectedDay.open }}</option>
-          </select> -->
         </div>
       </div>
     </div>
@@ -103,7 +96,6 @@ export default {
   data: function() {
     return {
       user: {},
-      city: "",
       currentDish: {},
       currentDishQuantity: 1,
       errors: [],

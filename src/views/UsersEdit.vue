@@ -27,6 +27,7 @@
         <label>Password confirmation:</label>
         <input type="password" class="form-control" v-model="user.password_confirmation" />
       </div>
+
       <div>
         Image: <input type="file" v-on:change="setFile($event)" ref="fileInput" />
       </div>
@@ -36,16 +37,30 @@
         <input type="text" class="form-control" v-model="user.phone" />
       </div>
       <div class="form-group">
-        <label>Address:</label>
-        <input type="text" class="form-control" v-model="user.address" />
-      </div>
-      <div class="form-group">
         <label>Bio:</label>
         <textarea type="text" class="form-control" v-model="user.bio"></textarea>
       </div>
       <div class="form-group">
         <label>Chef?</label>
         <input type="checkbox" class="form-control" v-model="user.chef" />
+      </div>
+
+      <h3>Address:</h3>
+      <div class="form-group">
+        <label>Street:</label>
+        <input type="text" class="form-control" v-model="user.address.street" />
+      </div>
+      <div class="form-group">
+        <label>City:</label>
+        <input type="text" class="form-control" v-model="user.address.city" />
+      </div>
+      <div class="form-group">
+        <label>State:</label>
+        <input type="text" class="form-control" v-model="user.address.state" />
+      </div>
+      <div class="form-group">
+        <label>Zip Code:</label>
+        <input type="text" class="form-control" v-model="user.address.zip_code" />
       </div>
 
       <div v-if="user.chef">
@@ -164,7 +179,10 @@ export default {
       }
 
       formData.append("phone", this.user.phone);
-      formData.append("address", this.user.address);
+      formData.append("street", this.user.address.street);
+      formData.append("city", this.user.address.city);
+      formData.append("state", this.user.address.state);
+      formData.append("zip_code", this.user.address.zip_code);
       formData.append("bio", this.user.bio);
       formData.append("chef", this.user.chef);
 
