@@ -112,7 +112,10 @@ export default {
   created: function() {
     axios.get(`/api/users/${this.$route.params.id}`).then(response => {
       this.user = response.data;
-      this.selectedCuisineIds = this.user.cuisines.map(cuisine => cuisine.id);
+
+      if (this.user.chef) {
+        this.selectedCuisineIds = this.user.cuisines.map(cuisine => cuisine.id);
+      }
     });
 
     this.getCuisines();
@@ -154,8 +157,12 @@ export default {
       formData.append("last_name", this.user.last_name);
       formData.append("image_url", this.user.image_url);
       formData.append("email", this.user.email);
-      formData.append("password", this.user.password);
-      formData.append("password_confirmation", this.user.password_confirmation);
+
+      if (this.user.password) {
+        formData.append("password", this.user.password);
+        formData.append("password_confirmation", this.user.password_confirmation);
+      }
+
       formData.append("phone", this.user.phone);
       formData.append("address", this.user.address);
       formData.append("bio", this.user.bio);
