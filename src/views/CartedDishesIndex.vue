@@ -36,7 +36,7 @@
       <p>Subtotal: {{ subtotal | currency }}</p>
       <p>Tax (9%): {{ tax | currency }}</p>
       <p>Total: {{ total | currency }}</p>
-      <button v-on:click="createOrder()">Place Order</button>
+      <button id="checkout-button" v-on:click="stripeCheckout()">Checkout</button>
     </div>
 
     <div v-else>Nothing in your shopping cart</div>
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+/* global Stripe */
 import axios from "axios";
 import moment from "moment";
 
@@ -71,6 +72,57 @@ export default {
     });
   },
   methods: {
+    stripeCheckout: function() {
+      var params = {
+        chef: this.chef.first_name,
+        price: parseInt(this.total * 100),
+      };
+      var stripe = Stripe(
+        "pk_test_51IW3JgE4aVL7z9ZuNPpzqd0dqW3bdRkLALJ0tvRSPIDKWB7U94LrO7W71uuPs9q47AAaU1e0McPLH19Ua53rX24X00igNTa3Jk"
+      );
+      var self = this;
+
+      fetch("http://localhost:3000/api/stripe-checkout", {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwt"),
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(params),
+      })
+        .then(function(response) {
+          self.createOrder();
+          return response.json();
+        })
+        .then(function(session) {
+          return stripe.redirectToCheckout({ sessionId: session.stripe_id });
+        })
+        .then(function(result) {
+          if (result.error) {
+            alert(result.error.message);
+          }
+        })
+        .catch(function(error) {
+          console.error("Error:", error);
+        });
+    },
+    createOrder: function() {
+      var params = {
+        subtotal: this.subtotal,
+        delivery: this.delivery,
+        ready_time: `${this.date} ${this.chosenTime}`,
+      };
+
+      console.log(params.ready_time);
+
+      axios.post("/api/orders", params).then(response => {
+        console.log(response.data);
+        // this.$router.push(`/orders/${response.data.id}`);
+        localStorage.removeItem("orderDay");
+        localStorage.removeItem("orderDate");
+      });
+    },
     populatePreorderHours: function() {
       var today = this.chef.preorder_hours.find(preorder_hour => {
         return preorder_hour.day_of_week === this.day;
@@ -88,6 +140,8 @@ export default {
         this.hours.push(nextHour);
         index++;
       }
+
+      this.chosenTime = this.hours[0];
     },
     updateCosts: function() {
       this.subtotal = 0;
@@ -124,20 +178,6 @@ export default {
 
           this.updateCosts();
         }
-      });
-    },
-    createOrder: function() {
-      var params = {
-        subtotal: this.subtotal,
-        delivery: this.delivery,
-        ready_time: `${this.date} ${this.chosenTime}`,
-      };
-
-      axios.post("/api/orders", params).then(response => {
-        console.log(response.data);
-        this.$router.push(`/orders/${response.data.id}`);
-        localStorage.removeItem("orderDay");
-        localStorage.removeItem("orderDate");
       });
     },
   },
