@@ -1,5 +1,5 @@
 <template>
-  <div class="users-edit">
+  <div class="users-edit" v-if="Object.keys(user).length">
     <form v-on:submit.prevent="update()">
       <h1>Edit Profile</h1>
       <ul>

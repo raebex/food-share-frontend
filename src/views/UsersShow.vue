@@ -1,5 +1,5 @@
 <template>
-  <div class="users-show">
+  <div class="users-show" v-if="Object.keys(user).length">
     <div class="profile">
       <h1>{{ user.first_name }} {{ user.last_name }}</h1>
       <router-link v-if="ownProfile()" :to="`/users/${user.id}/edit`">Edit Profile</router-link>
