@@ -1,7 +1,7 @@
 <template>
   <div class="carted-dishes-index">
     <h1>Cart</h1>
-    <div v-if="cartedDishes.length">
+    <div v-if="cartedDishes">
       <p>
         Order from chef:
         <router-link :to="`/users/${chef.id}`">
@@ -67,8 +67,11 @@ export default {
     axios.get("/api/carted_dishes").then(response => {
       this.cartedDishes = response.data.cart;
       this.chef = response.data.chef;
-      this.updateCosts();
-      this.populatePreorderHours();
+
+      if (this.cartedDishes) {
+        this.updateCosts();
+        this.populatePreorderHours();
+      }
     });
   },
   methods: {
