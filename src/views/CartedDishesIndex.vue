@@ -77,15 +77,16 @@ export default {
   methods: {
     stripeCheckout: function() {
       var params = {
-        chef: this.chef.first_name,
-        price: parseInt(this.total * 100),
+        subtotal: this.subtotal,
+        delivery: this.delivery,
+        ready_time: `${this.date} ${this.chosenTime}`,
       };
+
       var stripe = Stripe(
         "pk_test_51IW3JgE4aVL7z9ZuNPpzqd0dqW3bdRkLALJ0tvRSPIDKWB7U94LrO7W71uuPs9q47AAaU1e0McPLH19Ua53rX24X00igNTa3Jk"
       );
-      var self = this;
 
-      fetch("http://localhost:3000/api/stripe-checkout", {
+      fetch("http://localhost:3000/api/orders", {
         method: "POST",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwt"),
@@ -95,7 +96,8 @@ export default {
         body: JSON.stringify(params),
       })
         .then(function(response) {
-          self.createOrder();
+          localStorage.removeItem("orderDay");
+          localStorage.removeItem("orderDate");
           return response.json();
         })
         .then(function(session) {
@@ -109,22 +111,6 @@ export default {
         .catch(function(error) {
           console.error("Error:", error);
         });
-    },
-    createOrder: function() {
-      var params = {
-        subtotal: this.subtotal,
-        delivery: this.delivery,
-        ready_time: `${this.date} ${this.chosenTime}`,
-      };
-
-      console.log(params.ready_time);
-
-      axios.post("/api/orders", params).then(response => {
-        console.log(response.data);
-        // this.$router.push(`/orders/${response.data.id}`);
-        localStorage.removeItem("orderDay");
-        localStorage.removeItem("orderDate");
-      });
     },
     populatePreorderHours: function() {
       var today = this.chef.preorder_hours.find(preorder_hour => {
