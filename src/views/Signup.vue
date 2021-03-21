@@ -1,38 +1,89 @@
 <template>
   <div class="signup">
-    <form v-on:submit.prevent="submit()">
-      <h1>Signup</h1>
-      <ul>
-        <li class="text-danger" v-for="error in errors" v-bind:key="error">
-          {{ error }}
-        </li>
-      </ul>
-      <div class="form-group">
-        <label>First Name:</label>
-        <input type="text" class="form-control" v-model="firstName" />
+    <div class="container-fluid">
+      <div class="row no-gutter">
+        <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+        <div class="col-md-8 col-lg-6">
+          <div class="login d-flex align-items-center py-5">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-9 col-lg-8 mx-auto pl-5 pr-5">
+                  <h3 class="login-heading mb-4">Signup</h3>
+                  <form v-on:submit.prevent="submit()">
+                    <div class="form-label-group">
+                      <input
+                        type="text"
+                        id="inputFirstName"
+                        class="form-control"
+                        placeholder="First name"
+                        v-model="firstName"
+                      />
+                      <label for="inputFirstName">First name</label>
+                    </div>
+                    <div class="form-label-group">
+                      <input
+                        type="text"
+                        id="inputLastName"
+                        class="form-control"
+                        placeholder="Last name"
+                        v-model="lastName"
+                      />
+                      <label for="inputLastName">Last name</label>
+                    </div>
+                    <div class="form-label-group">
+                      <input
+                        type="email"
+                        id="inputEmail"
+                        class="form-control"
+                        placeholder="Email address"
+                        v-model="email"
+                      />
+                      <label for="inputEmail">Email address</label>
+                    </div>
+                    <div class="form-label-group">
+                      <input
+                        type="password"
+                        id="inputPassword"
+                        class="form-control"
+                        placeholder="Password"
+                        v-model="password"
+                      />
+                      <label for="inputPassword">Password</label>
+                    </div>
+                    <div class="form-label-group">
+                      <input
+                        type="password"
+                        id="inputPasswordConfirmation"
+                        class="form-control"
+                        placeholder="Password confirmation"
+                        v-model="passwordConfirmation"
+                      />
+                      <label for="inputPasswordConfirmation">Password confirmation</label>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-3">
+                      <input type="checkbox" class="custom-control-input" id="customCheck1" v-model="chef" />
+                      <label class="custom-control-label" for="customCheck1">Are you a chef?</label>
+                    </div>
+                    <p class="text-danger" v-for="error in errors" v-bind:key="error">
+                      {{ error }}
+                    </p>
+                    <input
+                      type="submit"
+                      class="btn btn-lg btn-outline-primary btn-block btn-login text-uppercase font-weight-bold mb-2"
+                      value="Signup"
+                    />
+                    <div class="text-center pt-3">
+                      Already have an account?
+                      <router-link class="font-weight-bold" to="/login">Login</router-link>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <label>Last Name:</label>
-        <input type="text" class="form-control" v-model="lastName" />
-      </div>
-      <div class="form-group">
-        <label>Email:</label>
-        <input type="email" class="form-control" v-model="email" />
-      </div>
-      <div class="form-group">
-        <label>Password:</label>
-        <input type="password" class="form-control" v-model="password" />
-      </div>
-      <div class="form-group">
-        <label>Password confirmation:</label>
-        <input type="password" class="form-control" v-model="passwordConfirmation" />
-      </div>
-      <div class="form-group">
-        <label>Are you a chef?</label>
-        <input type="checkbox" class="form-control" v-model="chef" />
-      </div>
-      <input type="submit" class="btn btn-primary" value="Submit" />
-    </form>
+    </div>
   </div>
 </template>
 
