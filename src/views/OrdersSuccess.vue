@@ -4,7 +4,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12 text-center pt-5 pb-5">
-            <img class="img-fluid mb-5" src="/img/thanks.png" alt="404">
+            <img class="img-fluid mb-5" src="/img/thanks.png" alt="Check mark">
             <h1 class="mt-2 mb-2 text-success">Congratulations {{ order.patron.first_name }}!</h1>
             <p class="mb-5">You have successfully placed your order from Chef {{ order.chef.first_name }}</p>
             <router-link class="btn btn-primary btn-lg" :to="`/orders/${order.id}`">View Order</router-link>
