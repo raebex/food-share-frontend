@@ -25,7 +25,7 @@ export default {
     };
   },
   created: function() {
-    axios.get(`/api/orders/success?order_id=${this.$route.query.order_id}`).then(response => {
+    axios.get(`/api/orders/${this.$route.query.order_id}`).then(response => {
       this.order = response.data;
     });
   },

@@ -80,13 +80,15 @@ export default {
         subtotal: this.subtotal,
         delivery: this.delivery,
         ready_time: `${this.date} ${this.chosenTime}`,
+        chef_name: this.chef.first_name,
+        total: this.total,
       };
 
       var stripe = Stripe(
         "pk_test_51IW3JgE4aVL7z9ZuNPpzqd0dqW3bdRkLALJ0tvRSPIDKWB7U94LrO7W71uuPs9q47AAaU1e0McPLH19Ua53rX24X00igNTa3Jk"
       );
 
-      fetch("http://localhost:3000/api/orders", {
+      fetch("http://localhost:3000/api/stripe-checkout", {
         method: "POST",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwt"),
@@ -96,8 +98,6 @@ export default {
         body: JSON.stringify(params),
       })
         .then(function(response) {
-          localStorage.removeItem("orderDay");
-          localStorage.removeItem("orderDate");
           return response.json();
         })
         .then(function(session) {
