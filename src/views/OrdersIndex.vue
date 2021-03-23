@@ -11,7 +11,8 @@
                   <img class="mr-4" :src="order.chef.image_url" alt="Generic placeholder image" />
                   <div class="media-body">
                     <span class="float-right text-info">
-                      Completed on {{ $parent.formattedDate(order.ready_time) }} <i class="icofont-check-circled text-success"></i>
+                      Completed on {{ $parent.formattedDate(order.ready_time) }}&nbsp;
+                      <i class="icofont-check-circled text-success"></i>
                     </span>
                     <h6 class="mb-2 text-black">
                       Order from Chef&nbsp;
