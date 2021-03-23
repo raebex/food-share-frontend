@@ -231,7 +231,6 @@ export default {
         .patch(`/api/users/${this.user.id}`, formData)
         .then(response => {
           console.log(response.data);
-          this.$router.push(`/users/${this.user.id}`);
         })
         .catch(error => {
           this.errors = error.response.data.errors;
