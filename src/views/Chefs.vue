@@ -5,26 +5,15 @@
         <div class="row d-none-m">
           <div class="col-md-12">
             <div class="dropdown float-right">
-              <select class="custom-select form-control-lg" v-on:change="setOrderDay" v-model="preorderDay">
-                <option v-for="day in preorderDays" :key="day.date" :value="day.day">
-                  {{ day.day }} {{ day.date }}
-                </option>
-              </select>
-              Choose preorder day:
-              <a
-                class="btn btn-outline-info dropdown-toggle btn-sm border-white-btn"
-                href="#"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                {{ preorderDay }}
-              </a>
-              <div class="dropdown-menu dropdown-menu-right shadow-sm border-0 ">
-                <a class="dropdown-item" href="#">Distance</a>
-                <a class="dropdown-item" href="#">No Of Offers</a>
-                <a class="dropdown-item" href="#">Rating</a>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="inputGroupSelect01">Choose preorder day:</label>
+                </div>
+                <select class="custom-select" id="inputGroupSelect01" v-on:change="setOrderDay" v-model="preorderDay">
+                  <option v-for="day in preorderDays" :key="day.date" :value="day.day">
+                    {{ day.day }} {{ day.date }}
+                  </option>
+                </select>
               </div>
             </div>
           </div>
@@ -94,53 +83,6 @@
             </div>
           </div>
           <div class="col-md-9">
-            <div class="owl-carousel owl-carousel-category owl-theme list-cate-page mb-4">
-              <div class="item">
-                <div class="osahan-category-item">
-                  <a href="#">
-                    <img class="img-fluid" src="img/list/1.png" alt="" />
-                    <h6>American</h6>
-                    <p>156</p>
-                  </a>
-                </div>
-              </div>
-              <div class="item">
-                <div class="osahan-category-item">
-                  <a href="#">
-                    <img class="img-fluid" src="img/list/2.png" alt="" />
-                    <h6>Pizza</h6>
-                    <p>120</p>
-                  </a>
-                </div>
-              </div>
-              <div class="item">
-                <div class="osahan-category-item">
-                  <a href="#">
-                    <img class="img-fluid" src="img/list/3.png" alt="" />
-                    <h6>Healthy</h6>
-                    <p>130</p>
-                  </a>
-                </div>
-              </div>
-              <div class="item">
-                <div class="osahan-category-item">
-                  <a href="#">
-                    <img class="img-fluid" src="img/list/4.png" alt="" />
-                    <h6>Vegetarian</h6>
-                    <p>120</p>
-                  </a>
-                </div>
-              </div>
-              <div class="item">
-                <div class="osahan-category-item">
-                  <a href="#">
-                    <img class="img-fluid" src="img/list/5.png" alt="" />
-                    <h6>Chinese</h6>
-                    <p>111</p>
-                  </a>
-                </div>
-              </div>
-            </div>
             <div class="row">
               <div
                 v-for="chef in filterBy(filterBy(chefs, cuisineFilter), preorderDay)"
@@ -151,21 +93,23 @@
                   <router-link :to="`/users/${chef.id}`">
                     <div class="list-card-image">
                       <img :src="chef.featured_dish.image_url" class="img-fluid item-img" />
-                      <img :src="chef.image_url" class="img-fluid item-img list-card-image__chef" />
                     </div>
                     <div class="p-3 position-relative">
-                      <div class="list-card-body">
-                        <h6 class="mb-1">
-                          <span class="text-black">
-                            {{ chef.first_name }}
-                          </span>
-                        </h6>
-                        <p class="text-gray mb-3">
-                          <span v-for="(cuisine, index) in chef.cuisines" :key="cuisine.id">
-                            <span v-if="index != 0">&nbsp;•&nbsp;</span>
-                            {{ cuisine.name }}
-                          </span>
-                        </p>
+                      <div class="list-card-body d-flex align-items-start">
+                        <img :src="chef.image_url" class="nav-osahan-pic rounded-pill mt-1" />
+                        <div>
+                          <h6 class="mb-1">
+                            <span class="text-black">
+                              {{ chef.first_name }}
+                            </span>
+                          </h6>
+                          <p class="text-gray">
+                            <span v-for="(cuisine, index) in chef.cuisines" :key="cuisine.id">
+                              <span v-if="index != 0">&nbsp;•&nbsp;</span>
+                              {{ cuisine.name }}
+                            </span>
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </router-link>
@@ -191,18 +135,6 @@
     </datalist> -->
   </div>
 </template>
-
-<style scoped>
-.list-card-image__chef {
-  position: absolute;
-  z-index: 1000;
-  right: 10px;
-  top: 177px;
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-}
-</style>
 
 <script>
 import axios from "axios";
