@@ -56,6 +56,7 @@
                         <strong>{{ order.chef.first_name }} {{ order.chef.last_name }}</strong>
                       </h6>
                     </router-link>
+                    <p class="mb-1" v-if="!order.delivery">{{ order.chef.address.street }}</p>
                     <p class="mb-1">{{ order.chef.address.city }}, {{ order.chef.address.state }}</p>
                   </div>
                 </div>
