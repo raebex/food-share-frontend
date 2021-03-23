@@ -7,13 +7,17 @@
           <div class="gold-members p-4">
             <router-link :to="`/orders/${order.id}`">
               <div class="media">
-                <img class="mr-4" :src="order.chef.image_url" alt="Generic placeholder image" />
+                <img class="mr-4" :src="order.isTicket ? order.patron.image_url : order.chef.image_url" alt="Generic placeholder image" />
                 <div class="media-body">
                   <span class="float-right text-info">
                     Completed on {{ $parent.formattedDate(order.ready_time) }}&nbsp;
                     <i class="icofont-check-circled text-success"></i>
                   </span>
-                  <h6 class="mb-2 text-black">
+                  <h6 v-if="order.isTicket" class="mb-2 text-black">
+                    Order for&nbsp;
+                    {{ order.patron.first_name }} {{ order.patron.last_name }}
+                  </h6>
+                  <h6 v-else class="mb-2 text-black">
                     Order from Chef&nbsp;
                     {{ order.chef.first_name }}
                   </h6>
@@ -28,7 +32,7 @@
                     &nbsp;{{ $parent.formattedDate(order.created_at) }}
                   </p>
                   <p class="text-dark">
-                    <span v-for="(dish, index) in order.dishes" :key="dish.id">
+                    <span v-for="(dish, index) in order.dishes" :key="index">
                       <span v-if="index != 0">,&nbsp;</span>
                       {{ dish.name }} x {{ dish.quantity }}
                     </span>
@@ -62,6 +66,11 @@ export default {
   created: function() {
     axios.get("/api/orders").then(response => {
       this.orders = response.data;
+      this.orders.forEach(order => {
+        if (this.$parent.getUserId() == order.chef.id) {
+          order.isTicket = true;
+        }
+      });
     });
   },
 };
