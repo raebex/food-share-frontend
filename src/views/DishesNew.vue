@@ -1,37 +1,46 @@
 <template>
   <div class="dishes-new">
-    <h1>Create a new dish</h1>
-    <form v-on:submit.prevent="createDish()">
-      <ul>
-        <li class="text-danger" v-for="error in errors" v-bind:key="error">
-          {{ error }}
-        </li>
-      </ul>
-      <div>
-        Image: <input type="file" v-on:change="setFile($event)" ref="fileInput" />
+    <div class="container">
+      <div class="row mt-4 mb-5">
+        <div class="col-md-6 mx-auto mb-5">
+          <form v-on:submit.prevent="createDish()">
+            <h3>Create a new dish</h3>
+            <ul>
+              <li class="text-danger" v-for="error in errors" v-bind:key="error">
+                {{ error }}
+              </li>
+            </ul>
+            <div class="form-group">
+              <label>Name:</label>
+              <input type="text" class="form-control" v-model="name" />
+            </div>
+            <div class="form-group">
+              <label>Price:</label>
+              <input type="text" class="form-control" v-model="price" />
+            </div>
+            <div class="form-group">
+              <label>Portion size:</label>
+              <input type="text" class="form-control" v-model="portionSize" />
+            </div>
+            <div class="form-group mt-3 mb-4">
+              <label for="inputImage">Image:</label>
+              <br />
+              <input id="inputImage" type="file" v-on:change="setFile($event)" ref="fileInput" />
+            </div>
+            <div class="form-group">
+              <label>Description:</label>
+              <textarea type="text" class="form-control" v-model="description"></textarea>
+            </div>
+            <div class="custom-control custom-checkbox mb-5">
+              <input type="checkbox" id="inputFeatured" class="custom-control-input" v-model="featured" />
+              <label class="custom-control-label" for="inputFeatured">Featured dish</label>
+            </div>
+
+            <input type="submit" class="btn btn-primary btn-lg mr-4" value="Create" />
+          </form>
+        </div>
       </div>
-      <div class="form-group">
-        <label>Name:</label>
-        <input type="text" v-model="name" />
-      </div>
-      <div class="form-group">
-        <label>Price:</label>
-        <input type="text" v-model="price" />
-      </div>
-      <div class="form-group">
-        <label>Description:</label>
-        <textarea v-model="description"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Portion Size:</label>
-        <input type="text" v-model="portionSize" />
-      </div>
-      <div class="form-group">
-        <label>Featured</label>
-        <input type="checkbox" class="form-control" v-model="featured" />
-      </div>
-      <input type="submit" class="btn btn-primary" value="Create" />
-    </form>
+    </div>
   </div>
 </template>
 
