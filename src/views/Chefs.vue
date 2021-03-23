@@ -5,7 +5,6 @@
         <div class="row d-none-m">
           <div class="col-md-12">
             <div class="dropdown float-right">
-              
               <select class="custom-select form-control-lg" v-on:change="setOrderDay" v-model="preorderDay">
                 <option v-for="day in preorderDays" :key="day.date" :value="day.day">
                   {{ day.day }} {{ day.date }}
@@ -59,14 +58,32 @@
                         <form class="filters-search mb-3">
                           <div class="form-group">
                             <i class="icofont-search"></i>
-                            <input type="text" class="form-control" placeholder="Start typing to search...">
+                            <!-- <input
+                              type="search"
+                              id="form1"
+                              class="form-control form-control-lg"
+                              placeholder="Search by cuisine"
+                              list="cuisineList"
+                              v-model="cuisineFilter"
+                            /> -->
+                            <!-- <input
+                              type="text"
+                              class="form-control"
+                              v-model="cuisineFilter"
+                              placeholder="Start typing to search..."
+                            /> -->
                           </div>
                         </form>
-                        <div class="custom-control custom-checkbox">
-                          <input type="checkbox" class="custom-control-input" id="cb6">
-                          <label class="custom-control-label" for="cb6">
-                            American
-                            <small class="text-black-50">156</small>
+                        <div v-for="cuisine in cuisines" :key="cuisine.id" class="custom-control custom-checkbox">
+                          <input
+                            type="checkbox"
+                            :value="cuisine.name"
+                            class="custom-control-input"
+                            :id="cuisine.name"
+                            v-model="cuisineFilter"
+                          />
+                          <label class="custom-control-label" :for="cuisine.name">
+                            {{ cuisine.name }}
                           </label>
                         </div>
                       </div>
@@ -170,9 +187,7 @@
                   <router-link :to="`/users/${chef.id}`">
                     <div class="list-card-image">
                       <img :src="chef.featured_dish.image_url" class="img-fluid item-img" />
-                    </div>
-                    <div class="list-card-image">
-                      <img :src="chef.image_url" class="img-fluid item-img" />
+                      <img :src="chef.image_url" class="img-fluid item-img list-card-image__chef" />
                     </div>
                     <div class="p-3 position-relative">
                       <div class="list-card-body">
@@ -198,7 +213,7 @@
       </div>
     </section>
 
-    <input
+    <!-- <input
       type="search"
       id="form1"
       class="form-control form-control-lg"
@@ -209,9 +224,21 @@
 
     <datalist id="cuisineList">
       <option v-for="cuisine in cuisines" :key="cuisine.id">{{ cuisine.name }}</option>
-    </datalist>
+    </datalist> -->
   </div>
 </template>
+
+<style scoped>
+.list-card-image__chef {
+  position: absolute;
+  z-index: 1000;
+  right: 10px;
+  top: 177px;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+</style>
 
 <script>
 import axios from "axios";
