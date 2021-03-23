@@ -7,7 +7,11 @@
           <div class="gold-members p-4">
             <router-link :to="`/orders/${order.id}`">
               <div class="media">
-                <img class="mr-4" :src="order.isTicket ? order.patron.image_url : order.chef.image_url" alt="Generic placeholder image" />
+                <img
+                  class="mr-4"
+                  :src="order.isTicket ? order.patron.image_url : order.chef.image_url"
+                  alt="Generic placeholder image"
+                />
                 <div class="media-body">
                   <span class="float-right text-info">
                     Completed on {{ $parent.formattedDate(order.ready_time) }}&nbsp;

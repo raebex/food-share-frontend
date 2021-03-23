@@ -96,7 +96,8 @@
                 <div class="media">
                   <div class="media-body">
                     <p class="mt-1 mb-0 text-black">
-                      {{ hour.day_of_week }}: {{ $parent.formattedTime(hour.open) }} - {{ $parent.formattedTime(hour.close) }}
+                      {{ hour.day_of_week }}: {{ $parent.formattedTime(hour.open) }} -
+                      {{ $parent.formattedTime(hour.close) }}
                     </p>
                   </div>
                 </div>
