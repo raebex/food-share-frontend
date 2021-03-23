@@ -1,7 +1,7 @@
 <template>
   <div class="carted-dishes-index offer-dedicated-body mt-4 mb-4 pt-2 pb-2">
     <div class="container">
-      <div class="row">
+      <div class="row" v-if="cartedDishes && cartedDishes.length > 0">
         <div class="col-md-8">
           <div class="bg-white rounded shadow-sm p-4 mb-4">
             <h4 class="mb-1">Order for: {{ day }}, {{ date }}</h4>
@@ -83,7 +83,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <div v-if="cartedDishes" class="generator-bg rounded shadow-sm mb-4 p-4 osahan-cart-item">
+          <div class="generator-bg rounded shadow-sm mb-4 p-4 osahan-cart-item">
             <div class="d-flex mb-4 osahan-cart-item-profile">
               <img class="img-fluid mr-3 rounded-pill" alt="osahan" :src="chef.image_url">
               <div class="d-flex flex-column">
@@ -111,12 +111,12 @@
                     <i class="icofont-plus"></i>
                   </button>
                 </span>
-                  <div class="media">
-                    <div class="mr-2"><i class="icofont-ui-press text-success food-item"></i></div>
-                    <div class="media-body">
-                        <p class="mt-1 mb-0 text-black">{{ cartedDish.dish.name }}</p>
-                    </div>
+                <div class="media">
+                  <div class="mr-2"><i class="icofont-ui-press text-success food-item"></i></div>
+                  <div class="media-body">
+                    <p class="mt-1 mb-0 text-black">{{ cartedDish.dish.name }}</p>
                   </div>
+                </div>
               </div>
             </div>
             <div class="mb-2 bg-white rounded p-2 clearfix">
@@ -145,7 +145,11 @@
           </div>
         </div>
       </div>
-      <!-- <h1 v-else>Nothing in your shopping cart</h1> -->
+      <div class="row" v-else>
+        <div class="col-md-12 text-center pt-5 pb-5">
+          <h1 class="mt-2 mb-2">Nothing in your shopping cart</h1>
+        </div>
+      </div>
     </div>
   </div>
 </template>
