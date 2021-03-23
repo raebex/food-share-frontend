@@ -1,109 +1,146 @@
 <template>
   <div class="users-edit" v-if="Object.keys(user).length">
-    <form v-on:submit.prevent="update()">
-      <h1>Edit Profile</h1>
-      <ul>
-        <li class="text-danger" v-for="error in errors" v-bind:key="error">
-          {{ error }}
-        </li>
-      </ul>
-      <div class="form-group">
-        <label>First Name:</label>
-        <input type="text" class="form-control" v-model="user.first_name" />
-      </div>
-      <div class="form-group">
-        <label>Last Name:</label>
-        <input type="text" class="form-control" v-model="user.last_name" />
-      </div>
-      <div class="form-group">
-        <label>Email:</label>
-        <input type="email" class="form-control" v-model="user.email" />
-      </div>
-      <div class="form-group">
-        <label>Password:</label>
-        <input type="password" class="form-control" v-model="user.password" />
-      </div>
-      <div class="form-group">
-        <label>Password confirmation:</label>
-        <input type="password" class="form-control" v-model="user.password_confirmation" />
-      </div>
+    <div class="container">
+      <form v-on:submit.prevent="update()">
+        <div class="row mt-4 mb-5">
+          <div class="col-md-7 mb-5 pr-5">
+            <h3>Edit Profile</h3>
+            <ul>
+              <li class="text-danger" v-for="error in errors" v-bind:key="error">
+                {{ error }}
+              </li>
+            </ul>
+            <div class="form-group">
+              <label>First Name:</label>
+              <input type="text" class="form-control" v-model="user.first_name" />
+            </div>
+            <div class="form-group">
+              <label>Last Name:</label>
+              <input type="text" class="form-control" v-model="user.last_name" />
+            </div>
+            <div class="form-group">
+              <label>Email:</label>
+              <input type="email" class="form-control" v-model="user.email" />
+            </div>
+            <div class="form-group">
+              <label>Password:</label>
+              <input type="password" class="form-control" v-model="user.password" />
+            </div>
+            <div class="form-group">
+              <label>Password confirmation:</label>
+              <input type="password" class="form-control" v-model="user.password_confirmation" />
+            </div>
 
-      <div>
-        Image: <input type="file" v-on:change="setFile($event)" ref="fileInput" />
-      </div>
+            <div class="form-group mt-3 mb-4">
+              <label for="inputImage">Image:</label>
+              <br />
+              <input id="inputImage" type="file" v-on:change="setFile($event)" ref="fileInput" />
+            </div>
 
-      <div class="form-group">
-        <label>Phone number:</label>
-        <input type="text" class="form-control" v-model="user.phone" />
-      </div>
-      <div class="form-group">
-        <label>Bio:</label>
-        <textarea type="text" class="form-control" v-model="user.bio"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Chef?</label>
-        <input type="checkbox" class="form-control" v-model="user.chef" />
-      </div>
+            <div class="form-group">
+              <label>Phone number:</label>
+              <input type="text" class="form-control" v-model="user.phone" />
+            </div>
+            <div class="form-group">
+              <label>Bio:</label>
+              <textarea type="text" class="form-control" v-model="user.bio"></textarea>
+            </div>
+            <div class="custom-control custom-checkbox mb-5">
+              <input type="checkbox" id="inputChef" class="custom-control-input" v-model="user.chef" />
+              <label class="custom-control-label" for="inputChef">Are you a chef?</label>
+            </div>
 
-      <h3>Address:</h3>
-      <div class="form-group">
-        <label>Street:</label>
-        <input type="text" class="form-control" v-model="user.address.street" />
-      </div>
-      <div class="form-group">
-        <label>City:</label>
-        <input type="text" class="form-control" v-model="user.address.city" />
-      </div>
-      <div class="form-group">
-        <label>State:</label>
-        <input type="text" class="form-control" v-model="user.address.state" />
-      </div>
-      <div class="form-group">
-        <label>Zip Code:</label>
-        <input type="text" class="form-control" v-model="user.address.zip_code" />
-      </div>
+            <h3>Address:</h3>
+            <div class="form-group">
+              <label>Street:</label>
+              <input type="text" class="form-control" v-model="user.address.street" />
+            </div>
+            <div class="form-group">
+              <label>City:</label>
+              <input type="text" class="form-control" v-model="user.address.city" />
+            </div>
+            <div class="form-group">
+              <label>State:</label>
+              <input type="text" class="form-control" v-model="user.address.state" />
+            </div>
+            <div class="form-group">
+              <label>Zip Code:</label>
+              <input type="text" class="form-control" v-model="user.address.zip_code" />
+            </div>
+            <input type="submit" class="btn btn-primary btn-lg mr-4" value="Save" />
+            <button class="btn btn-lg btn-outline-primary" v-on:click="destroyProfile()">Delete Profile</button>
+          </div>
+          <div v-if="user.chef" class="col-md-5">
+            <h3>Cuisines</h3>
+            <div v-for="cuisine in cuisines" :key="cuisine.name" class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                :value="cuisine.id"
+                class="custom-control-input"
+                :id="cuisine.name"
+                v-model="selectedCuisineIds"
+              />
+              <label class="custom-control-label" :for="cuisine.name">
+                {{ cuisine.name }}
+              </label>
+            </div>
+            <hr />
+            <h3>Hours</h3>
+            <div v-for="hour in user.preorder_hours" :key="hour.id" class="bg-white rounded shadow-sm">
+              <div class="gold-members p-2 border-bottom">
+                <span class="count-number float-right">
+                  <button v-on:click="deletePreorderHour(hour)" class="btn btn-outline-secondary btn-sm left dec">
+                    <i class="icofont-close"></i>
+                  </button>
+                </span>
+                <div class="media">
+                  <div class="media-body">
+                    <p class="mt-1 mb-0 text-black">
+                      {{ hour.day_of_week }}: {{ $parent.formattedTime(hour.open) }} - {{ $parent.formattedTime(hour.close) }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-      <div v-if="user.chef">
-        <h3>Cuisines</h3>
-        <li v-for="cuisine in cuisines" :key="cuisine.name">
-          <input type="checkbox" :id="cuisine.name" :value="cuisine.id" v-model="selectedCuisineIds" />
-          <label :for="cuisine.name">{{ cuisine.name }}</label>
-        </li>
-      </div>
-      <input type="submit" class="btn btn-primary" value="Save" />
-      <button v-on:click="destroyProfile()">Delete Profile</button>
-    </form>
+            <h6 class="mt-5">Add a new hour:</h6>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputNewDay">Day</label>
+              </div>
+              <select id="inputNewDay" class="custom-select" v-model="newDay">
+                <option>Monday</option>
+                <option>Tuesday</option>
+                <option>Wednesday</option>
+                <option>Thursday</option>
+                <option>Friday</option>
+                <option>Saturday</option>
+                <option>Sunday</option>
+              </select>
+            </div>
 
-    <div v-if="user.chef">
-      <h3>Hours</h3>
-      <div v-for="hour in user.preorder_hours" :key="hour.id">
-        <span>{{ hour.day_of_week }}:</span>
-        <span>{{ $parent.formattedTime(hour.open) }} to {{ $parent.formattedTime(hour.close) }}</span>
-        <button v-on:click="deletePreorderHour(hour)">x</button>
-      </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputNewOpen">Open time</label>
+              </div>
+              <select id="inputNewOpen" class="custom-select" v-model="newOpen">
+                <option v-for="time in timeOptions" :key="time">{{ time }}</option>
+              </select>
+            </div>
 
-      Day:
-      <select v-model="newDay">
-        <option>Monday</option>
-        <option>Tuesday</option>
-        <option>Wednesday</option>
-        <option>Thursday</option>
-        <option>Friday</option>
-        <option>Saturday</option>
-        <option>Sunday</option>
-      </select>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputNewClose">Close time</label>
+              </div>
+              <select id="inputNewClose" class="custom-select" v-model="newClose">
+                <option v-for="time in timeOptions" :key="time">{{ time }}</option>
+              </select>
+            </div>
 
-      Open Time:
-      <select v-model="newOpen">
-        <option v-for="time in timeOptions" :key="time">{{ time }}</option>
-      </select>
-
-      Close Time:
-      <select v-model="newClose">
-        <option v-for="time in timeOptions" :key="time">{{ time }}</option>
-      </select>
-
-      <button v-on:click="addPreorderHour()">Add hour</button>
+            <button class="btn btn-primary" v-on:click="addPreorderHour()">Add hour</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </template>
