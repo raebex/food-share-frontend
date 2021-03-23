@@ -6,7 +6,8 @@
           <div class="bg-white rounded shadow-sm p-4 mb-4">
             <h4 class="mb-1">Order for: {{ day }}, {{ date }}</h4>
             <h6 class="mb-3 text-black-50">
-              From <router-link :to="`/users/${chef.id}`">Chef {{ chef.first_name }}</router-link>
+              From
+              <router-link :to="`/users/${chef.id}`">Chef {{ chef.first_name }}</router-link>
             </h6>
             <p>Choose time:</p>
             <a
@@ -29,11 +30,25 @@
             <p>Order method:</p>
             <div class="mb-5">
               <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="delivery" name="orderMethod" class="custom-control-input" :value="true" v-model="delivery" />
+                <input
+                  type="radio"
+                  id="delivery"
+                  name="orderMethod"
+                  class="custom-control-input"
+                  :value="true"
+                  v-model="delivery"
+                />
                 <label class="custom-control-label" for="delivery">Delivery</label>
               </div>
               <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="pickup" name="orderMethod" class="custom-control-input" :value="false" v-model="delivery" />
+                <input
+                  type="radio"
+                  id="pickup"
+                  name="orderMethod"
+                  class="custom-control-input"
+                  :value="false"
+                  v-model="delivery"
+                />
                 <label class="custom-control-label" for="pickup">Pickup</label>
               </div>
             </div>
@@ -85,7 +100,7 @@
         <div class="col-md-4">
           <div class="generator-bg rounded shadow-sm mb-4 p-4 osahan-cart-item">
             <div class="d-flex mb-4 osahan-cart-item-profile">
-              <img class="img-fluid mr-3 rounded-pill" alt="osahan" :src="chef.image_url">
+              <img class="img-fluid mr-3 rounded-pill" alt="osahan" :src="chef.image_url" />
               <div class="d-flex flex-column">
                 <h6 class="mb-1 text-white">{{ chef.first_name }} {{ chef.last_name }}</h6>
                 <p class="mb-0 text-white">
@@ -107,7 +122,8 @@
                   <input class="count-number-input" type="text" :value="cartedDish.quantity" readonly="" />
                   <button
                     v-on:click="updateQuantity(cartedDish, 'add')"
-                    class="btn btn-outline-secondary btn-sm right inc">
+                    class="btn btn-outline-secondary btn-sm right inc"
+                  >
                     <i class="icofont-plus"></i>
                   </button>
                 </span>
@@ -259,6 +275,12 @@ export default {
       this.tax = this.subtotal * 0.09;
       this.total = this.tax + this.subtotal;
     },
+    updateCartNumber: function() {
+      this.$parent.cartNumber = 0;
+      this.cartedDishes.forEach(dish => {
+        this.$parent.cartNumber += dish.quantity;
+      });
+    },
     updateQuantity: function(dish, operator) {
       var params = {
         quantity: operator === "add" ? dish.quantity + 1 : dish.quantity - 1,
@@ -274,6 +296,7 @@ export default {
             .then(response => {
               console.log(response.data);
               this.cartedDishes.splice(index, 1);
+              this.updateCartNumber();
               this.updateCosts();
             })
             .catch(error => {
@@ -284,6 +307,7 @@ export default {
           this.cartedDishes[index].subtotal = newSubtotal;
           this.cartedDishes[index].quantity = newQuantity;
 
+          this.updateCartNumber();
           this.updateCosts();
         }
       });

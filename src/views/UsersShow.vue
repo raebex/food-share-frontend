@@ -196,7 +196,12 @@
                   <input id="inputPortion" class="form-control" type="text" v-model="currentDish.portion_size" />
                 </div>
                 <div class="custom-control custom-checkbox mb-5">
-                  <input id="inputFeatured" type="checkbox" class="custom-control-input" v-model="currentDish.featured" />
+                  <input
+                    id="inputFeatured"
+                    type="checkbox"
+                    class="custom-control-input"
+                    v-model="currentDish.featured"
+                  />
                   <label class="custom-control-label" for="inputFeatured">Featured</label>
                 </div>
                 <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Close</button>
@@ -339,6 +344,7 @@ export default {
         .post("api/carted_dishes", params)
         .then(response => {
           console.log("Dish added to cart!", response.data);
+          this.$parent.cartNumber += this.currentDishQuantity;
           $("#dishShowModal").modal("hide");
         })
         .catch(error => {

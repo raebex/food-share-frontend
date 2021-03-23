@@ -49,7 +49,7 @@
               <router-link class="nav-link" to="/cart">
                 <i class="fas fa-shopping-basket"></i>
                 Cart
-                <!-- <span class="badge badge-success">5</span> -->
+                <span class="badge badge-success">{{ cartNumber }}</span>
               </router-link>
             </li>
           </ul>
@@ -62,8 +62,23 @@
 
 <script>
 import moment from "moment";
+import axios from "axios";
 
 export default {
+  data: function() {
+    return {
+      cartNumber: 0,
+    };
+  },
+  created: function() {
+    axios.get("api/carted_dishes").then(response => {
+      var cartedDishes = response.data.cart;
+
+      cartedDishes.forEach(dish => {
+        this.cartNumber += dish.quantity;
+      });
+    });
+  },
   methods: {
     isLoggedIn: function() {
       return localStorage.getItem("jwt");
