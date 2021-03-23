@@ -75,13 +75,13 @@ export default {
       return moment
         .parseZone(date)
         .utc()
-        .format("MMM D, YYYY h:mm A");
+        .format("MMM D, YYYY h A");
     },
     formattedTime: function(time) {
       return moment
         .parseZone(time)
         .utc()
-        .format("h:mm A");
+        .format("h A");
     },
   },
 };
