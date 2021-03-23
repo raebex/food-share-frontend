@@ -19,6 +19,8 @@ export default {
       .post("/api/orders", params)
       .then(response => {
         var newOrder = response.data;
+        localStorage.removeItem("orderDay");
+        localStorage.removeItem("orderDate");
         this.$router.push(`/orders/success?order_id=${newOrder.id}`);
       })
       .catch(error => {
