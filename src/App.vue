@@ -45,7 +45,7 @@
                 </router-link>
               </div>
             </li>
-            <li v-if="isLoggedIn()" class="nav-item dropdown dropdown-cart">
+            <li v-if="isLoggedIn() && !isChef()" class="nav-item dropdown dropdown-cart">
               <router-link class="nav-link" to="/cart">
                 <i class="fas fa-shopping-basket"></i>
                 Cart
@@ -70,6 +70,9 @@ export default {
     },
     getUserId: function() {
       return localStorage.user_id;
+    },
+    isChef: function() {
+      return localStorage.chef;
     },
     formattedDate: function(date) {
       return moment
