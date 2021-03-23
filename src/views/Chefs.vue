@@ -98,84 +98,48 @@
               <div class="item">
                 <div class="osahan-category-item">
                   <a href="#">
-                    <img class="img-fluid" src="img/list/1.png" alt="">
+                    <img class="img-fluid" src="img/list/1.png" alt="" />
                     <h6>American</h6>
                     <p>156</p>
                   </a>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="osahan-category-item">
-                        <a href="#">
-                          <img class="img-fluid" src="img/list/2.png" alt="">
-                          <h6>Pizza</h6>
-                          <p>120</p>
-                        </a>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="osahan-category-item">
-                        <a href="#">
-                          <img class="img-fluid" src="img/list/3.png" alt="">
-                          <h6>Healthy</h6>
-                          <p>130</p>
-                        </a>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="osahan-category-item">
-                        <a href="#">
-                          <img class="img-fluid" src="img/list/4.png" alt="">
-                          <h6>Vegetarian</h6>
-                          <p>120</p>
-                        </a>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="osahan-category-item">
-                        <a href="#">
-                          <img class="img-fluid" src="img/list/5.png" alt="">
-                          <h6>Chinese</h6>
-                          <p>111</p>
-                        </a>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="osahan-category-item">
-                        <a href="#">
-                          <img class="img-fluid" src="img/list/6.png" alt="">
-                          <h6>Hamburgers</h6>
-                          <p>958</p>
-                        </a>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="osahan-category-item">
-                        <a href="#">
-                          <img class="img-fluid" src="img/list/7.png" alt="">
-                          <h6>Dessert</h6>
-                          <p>56</p>
-                        </a>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="osahan-category-item">
-                        <a href="#">
-                          <img class="img-fluid" src="img/list/8.png" alt="">
-                          <h6>Chicken</h6>
-                          <p>40</p>
-                        </a>
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="osahan-category-item">
-                        <a href="#">
-                          <img class="img-fluid" src="img/list/9.png" alt="">
-                          <h6>Indian</h6>
-                          <p>156</p>
-                        </a>
-                    </div>
-                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="osahan-category-item">
+                  <a href="#">
+                    <img class="img-fluid" src="img/list/2.png" alt="" />
+                    <h6>Pizza</h6>
+                    <p>120</p>
+                  </a>
+                </div>
+              </div>
+              <div class="item">
+                <div class="osahan-category-item">
+                  <a href="#">
+                    <img class="img-fluid" src="img/list/3.png" alt="" />
+                    <h6>Healthy</h6>
+                    <p>130</p>
+                  </a>
+                </div>
+              </div>
+              <div class="item">
+                <div class="osahan-category-item">
+                  <a href="#">
+                    <img class="img-fluid" src="img/list/4.png" alt="" />
+                    <h6>Vegetarian</h6>
+                    <p>120</p>
+                  </a>
+                </div>
+              </div>
+              <div class="item">
+                <div class="osahan-category-item">
+                  <a href="#">
+                    <img class="img-fluid" src="img/list/5.png" alt="" />
+                    <h6>Chinese</h6>
+                    <p>111</p>
+                  </a>
+                </div>
+              </div>
             </div>
             <div class="row">
               <div
@@ -198,7 +162,7 @@
                         </h6>
                         <p class="text-gray mb-3">
                           <span v-for="(cuisine, index) in chef.cuisines" :key="cuisine.id">
-                            <span v-if="index != 0"> • </span>
+                            <span v-if="index != 0">&nbsp;•&nbsp;</span>
                             {{ cuisine.name }}
                           </span>
                         </p>

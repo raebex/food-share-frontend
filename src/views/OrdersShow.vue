@@ -7,25 +7,27 @@
             <div class="p-5 osahan-invoice bg-white shadow-sm">
               <div v-if="!isTicket" class="row mb-5 pb-3">
                 <div class="col-md-8 col-10">
-                  <h3 class="mt-0">Thanks for supporting 
+                  <h3 class="mt-0">
+                    Thanks for supporting&nbsp;
                     <router-link :to="`/users/${order.chef.id}`">
                       <strong class="text-secondary">Chef {{ order.chef.first_name }}</strong>
-                    </router-link>, 
-                    {{ order.patron.first_name }}! Here are your order details: 
+                    </router-link>
+                    ,&nbsp;{{ order.patron.first_name }}! Here are your order details:
                   </h3>
                 </div>
               </div>
-              <h1 class="mb-1 text-black">Order No: 
+              <h1 class="mb-1 text-black">
+                Order No:&nbsp;
                 <strong>{{ order.id }}</strong>
               </h1>
               <div class="row">
                 <div class="col-md-6">
                   <p class="mb-1">
-                    Placed at: 
+                    Placed at:&nbsp;
                     <strong>{{ $parent.formattedDate(order.created_at) }}</strong>
                   </p>
                   <p class="mb-1">
-                    Ready for: 
+                    Ready for:&nbsp;
                     <strong>{{ $parent.formattedDate(order.ready_time) }}</strong>
                   </p>
                   <p v-if="order.delivery">Method: Delivery</p>
@@ -36,7 +38,7 @@
                     <h6 class="mb-1 text-black">Patron info:</h6>
                     <p class="mb-1 text-primary">
                       <strong>
-                        {{ order.patron.first_name }} 
+                        {{ order.patron.first_name }}&nbsp;
                         {{ order.patron.last_name }}
                       </strong>
                     </p>
@@ -45,7 +47,8 @@
                     <div v-if="order.delivery">
                       <p class="mb-1">{{ order.patron.address.street }}</p>
                       <p class="mb-1">
-                        {{ order.patron.address.city }}, {{ order.patron.address.state }} {{ order.patron.address.zip_code }}
+                        {{ order.patron.address.city }}, {{ order.patron.address.state }}&nbsp;
+                        {{ order.patron.address.zip_code }}
                       </p>
                     </div>
                   </div>
@@ -89,7 +92,7 @@
                       </tr>
                       <tr>
                         <td class="text-right" colspan="2">
-                          <h6 class="text-success">Grand Total: </h6>
+                          <h6 class="text-success">Grand Total:&nbsp;</h6>
                         </td>
                         <td class="text-right">
                           <h6 class="text-success">{{ order.total | currency }}</h6>
@@ -124,6 +127,6 @@ export default {
         this.isTicket = true;
       }
     });
-  }
+  },
 };
 </script>
