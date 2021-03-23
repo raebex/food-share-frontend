@@ -7,22 +7,24 @@
       <div class="restaurant-detailed-header">
         <div class="container">
           <div class="row d-flex align-items-center">
-            <div class="col-md-8">
+            <div class="col-sm-12 col-md-8">
               <div class="restaurant-detailed-header-left">
                 <img class="img-fluid mr-3 float-left" alt="osahan" :src="user.image_url" />
                 <h2 class="text-white">{{ user.first_name }} {{ user.last_name }}</h2>
-                <p class="text-white mb-1"><i class="icofont-location-pin"></i>
+                <p class="text-white mb-1">
+                  <i class="icofont-location-pin"></i>
                   {{ user.address.city }}, {{ user.address.state }}
                 </p>
-                <p v-if="user.chef" class="text-white mb-0"><i class="icofont-food-cart"></i>
-                  <span v-for="(cuisine, index) in user.cuisines" :key="cuisine.id">
-                    <span v-if="index != 0">, </span>
+                <p v-if="user.chef" class="text-white mb-0">
+                  <i class="icofont-food-cart"></i>
+                  <span v-for="(cuisine, index) in user.cuisines" :key="index">
+                    <span v-if="index != 0">,&nbsp;</span>
                     {{ cuisine.name }}
                   </span>
                 </p>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-sm-12 col-md-4">
               <router-link class="float-right" v-if="ownProfile()" :to="`/users/${user.id}/edit`">
                 <button class="btn btn-primary">Edit Profile</button>
               </router-link>
@@ -40,7 +42,7 @@
               <div v-if="user.chef">
                 <h6>Hours</h6>
                 <p v-for="hour in user.preorder_hours" :key="hour.id" class="mb-1 clearfix">
-                  <span class="float-left">{{ hour.day_of_week }}: </span>
+                  <span class="float-left">{{ hour.day_of_week }}:&nbsp;</span>
                   <span class="float-right">
                     {{ $parent.formattedTime(hour.open) }} - {{ $parent.formattedTime(hour.close) }}
                   </span>
@@ -124,7 +126,7 @@
                           &nbsp;{{ $parent.formattedDate(order.created_at) }}
                         </p>
                         <p class="text-dark">
-                          <span v-for="(dish, index) in order.dishes" :key="dish.id">
+                          <span v-for="(dish, index) in order.dishes" :key="index">
                             <span v-if="index != 0">,&nbsp;</span>
                             {{ dish.name }} x {{ dish.quantity }}
                           </span>
@@ -193,13 +195,13 @@
                   <label for="inputPortion">Portion Size:</label>
                   <input id="inputPortion" class="form-control" type="text" v-model="currentDish.portion_size" />
                 </div>
-                <div class="form-check mb-5">
-                  <input id="inputFeatured" type="checkbox" class="form-check-input" v-model="currentDish.featured" />
-                  <label class="form-check-label" for="inputFeatured">Featured</label>
+                <div class="custom-control custom-checkbox mb-5">
+                  <input id="inputFeatured" type="checkbox" class="custom-control-input" v-model="currentDish.featured" />
+                  <label class="custom-control-label" for="inputFeatured">Featured</label>
                 </div>
                 <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Close</button>
-                <button class="btn btn-outline-primary mr-2" v-on:click="destroyDish(currentDish)">Delete</button>
-                <input type="submit" class="btn btn-primary" value="Save" />
+                <input type="submit" class="btn btn-primary  mr-2" value="Save" />
+                <button class="btn btn-outline-primary" v-on:click="destroyDish(currentDish)">Delete</button>
               </form>
             </div>
           </div>
@@ -257,6 +259,7 @@
 </template>
 
 <script>
+/* global $ */
 import axios from "axios";
 
 export default {
@@ -307,7 +310,7 @@ export default {
           console.log("Dish updated.", response.data);
           var index = this.user.dishes.indexOf(dish);
           this.user.dishes[index].image_url = response.data.image_url;
-          // $("#dishEditModal").modal("hide");
+          $("#dishEditModal").modal("hide");
         })
         .catch(error => {
           console.log(error.response.data.errors);
@@ -320,7 +323,7 @@ export default {
           console.log(response.data);
           var index = this.user.dishes.indexOf(dish);
           this.user.dishes.splice(index, 1);
-          // $("#dishEditModal").modal("hide");
+          $("#dishEditModal").modal("hide");
         })
         .catch(error => {
           console.log(error);
