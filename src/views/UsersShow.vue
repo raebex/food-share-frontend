@@ -1,36 +1,96 @@
 <template>
   <div class="users-show" v-if="Object.keys(user).length">
-    <div class="profile">
-      <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-      <router-link v-if="ownProfile()" :to="`/users/${user.id}/edit`">Edit Profile</router-link>
-      <img :src="user.image_url" :alt="user.first_name" />
-      <p>{{ user.address.city }}, {{ user.address.state }}</p>
-      <p>{{ user.bio }}</p>
-      <div v-if="user.chef">
-        <span v-for="cuisine in user.cuisines" :key="cuisine.id">
-          {{ cuisine.name }}
-        </span>
-        <div>
-          <h3>Hours</h3>
-          <div v-for="hour in user.preorder_hours" :key="hour.id">
-            <span>{{ hour.day_of_week }}: </span>
-            <span>{{ $parent.formattedTime(hour.open) }} to {{ $parent.formattedTime(hour.close) }}</span>
+    <section class="restaurant-detailed-banner">
+      <div class="text-center">
+        <img class="img-fluid cover" src="/img/mall-dedicated-banner.png" />
+      </div>
+      <div class="restaurant-detailed-header">
+        <div class="container">
+          <div class="row d-flex align-items-center">
+            <div class="col-md-8">
+              <div class="restaurant-detailed-header-left">
+                <img class="img-fluid mr-3 float-left" alt="osahan" :src="user.image_url" />
+                <h2 class="text-white">{{ user.first_name }} {{ user.last_name }}</h2>
+                <p class="text-white mb-1"><i class="icofont-location-pin"></i>
+                  {{ user.address.city }}, {{ user.address.state }}
+                </p>
+                <p v-if="user.chef" class="text-white mb-0"><i class="icofont-food-cart"></i>
+                  <span v-for="(cuisine, index) in user.cuisines" :key="cuisine.id">
+                    <span v-if="index != 0">, </span>
+                    {{ cuisine.name }}
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <router-link class="float-right" v-if="ownProfile()" :to="`/users/${user.id}/edit`">
+                <button class="btn btn-primary">Edit Profile</button>
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div v-if="user.chef">
-      <h3>Dishes</h3>
-      <router-link v-if="ownProfile()" to="/dishes/new">Create new dish</router-link>
-      <div v-for="dish in user.dishes" :key="dish.id">
-        <h4>{{ dish.name }}</h4>
-        <img :src="dish.image_url" :alt="dish.name" />
-        <p>{{ dish.price | currency }}</p>
-        <button v-if="ownProfile()" v-on:click="showUpdateDish(dish)">Edit</button>
-        <button v-else v-on:click="showDish(dish)">More info</button>
+    <section class="pt-2 pb-2 mt-4 mb-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="m-2 pr-4">
+                <div v-if="user.chef">
+                  <h6>Hours</h6>
+                  <p v-for="hour in user.preorder_hours" :key="hour.id" class="mb-1 clearfix">
+                    <span class="float-left">{{ hour.day_of_week }}: </span>
+                    <span class="float-right">{{ $parent.formattedTime(hour.open) }} - {{ $parent.formattedTime(hour.close) }}</span>
+                  </p>
+                </div>
+                <hr />
+                <h6>About</h6>
+                <p>{{ user.bio }}</p>
+            </div>
+          </div>
+          <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h3>Dishes</h3>
+              <router-link v-if="ownProfile()" to="/dishes/new">
+                <button class="btn btn-outline-primary">+ New Dish</button>
+              </router-link>
+            </div>
+            <div v-if="user.chef" class="row">
+              <div v-for="dish in user.dishes" :key="dish.id" class="col-md-4 col-sm-6 mb-4">
+                <div class="list-card bg-white h-100 rounded overflow-hidden position-relative shadow-sm">
+                  <div class="list-card-image">
+                    <a href="#">
+                      <img :src="dish.image_url" class="img-fluid item-img" />
+                    </a>
+                  </div>
+                  <div class="p-3 position-relative">
+                    <div class="list-card-body">
+                      <h6 class="mb-4">{{ dish.name }}</h6>
+                      <p class="text-gray time mb-0">
+                        {{ dish.price | currency }}
+                        <span class="float-right mb-3">
+                          <button
+                            class="btn btn-outline-secondary btn-sm"
+                            v-if="ownProfile()"
+                            v-on:click="showUpdateDish(dish)"
+                          >
+                            Edit
+                          </button>
+                          <button class="btn btn-outline-secondary btn-sm" v-else v-on:click="showDish(dish)">
+                            More info
+                          </button>
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
     <dialog v-if="user.chef && ownProfile()">
       <form method="dialog">
