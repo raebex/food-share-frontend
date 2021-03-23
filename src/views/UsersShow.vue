@@ -37,53 +37,100 @@
         <div class="row">
           <div class="col-md-3">
             <div class="m-2 pr-4">
-                <div v-if="user.chef">
-                  <h6>Hours</h6>
-                  <p v-for="hour in user.preorder_hours" :key="hour.id" class="mb-1 clearfix">
-                    <span class="float-left">{{ hour.day_of_week }}: </span>
-                    <span class="float-right">{{ $parent.formattedTime(hour.open) }} - {{ $parent.formattedTime(hour.close) }}</span>
-                  </p>
-                </div>
+              <div v-if="user.chef">
+                <h6>Hours</h6>
+                <p v-for="hour in user.preorder_hours" :key="hour.id" class="mb-1 clearfix">
+                  <span class="float-left">{{ hour.day_of_week }}: </span>
+                  <span class="float-right">{{ $parent.formattedTime(hour.open) }} - {{ $parent.formattedTime(hour.close) }}</span>
+                </p>
                 <hr />
-                <h6>About</h6>
-                <p>{{ user.bio }}</p>
+              </div>
+              <h6>About</h6>
+              <p>{{ user.bio }}</p>
             </div>
           </div>
           <div class="col-md-9">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <h3>Dishes</h3>
-              <router-link v-if="ownProfile()" to="/dishes/new">
-                <button class="btn btn-outline-primary">+ New Dish</button>
-              </router-link>
-            </div>
-            <div v-if="user.chef" class="row">
-              <div v-for="dish in user.dishes" :key="dish.id" class="col-md-4 col-sm-6 mb-4">
-                <div class="list-card bg-white h-100 rounded overflow-hidden position-relative shadow-sm">
-                  <div class="list-card-image">
-                    <a href="#">
-                      <img :src="dish.image_url" class="img-fluid item-img" />
-                    </a>
-                  </div>
-                  <div class="p-3 position-relative">
-                    <div class="list-card-body">
-                      <h6 class="mb-4">{{ dish.name }}</h6>
-                      <p class="text-gray time mb-0">
-                        {{ dish.price | currency }}
-                        <span class="float-right mb-3">
-                          <button
-                            class="btn btn-outline-secondary btn-sm"
-                            v-if="ownProfile()"
-                            v-on:click="showUpdateDish(dish)"
-                          >
-                            Edit
-                          </button>
-                          <button class="btn btn-outline-secondary btn-sm" v-else v-on:click="showDish(dish)">
-                            More info
-                          </button>
-                        </span>
-                      </p>
+            <div v-if="user.chef">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3>Dishes</h3>
+                <router-link v-if="ownProfile()" to="/dishes/new">
+                  <button class="btn btn-outline-primary">+ New Dish</button>
+                </router-link>
+              </div>
+              <div class="row">
+                <div v-for="dish in user.dishes" :key="dish.id" class="col-md-4 col-sm-6 mb-4">
+                  <div class="list-card bg-white h-100 rounded overflow-hidden position-relative shadow-sm">
+                    <div class="list-card-image">
+                      <a href="#">
+                        <img :src="dish.image_url" class="img-fluid item-img" />
+                      </a>
+                    </div>
+                    <div class="p-3 position-relative">
+                      <div class="list-card-body">
+                        <h6 class="mb-4">{{ dish.name }}</h6>
+                        <p class="text-gray time mb-0">
+                          {{ dish.price | currency }}
+                          <span class="float-right mb-3">
+                            <button
+                              class="btn btn-outline-secondary btn-sm"
+                              v-if="ownProfile()"
+                              v-on:click="showUpdateDish(dish)"
+                            >
+                              Edit
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" v-else v-on:click="showDish(dish)">
+                              More info
+                            </button>
+                          </span>
+                        </p>
+                      </div>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+            <div v-else>
+              <h3 class="mb-4">Past Orders</h3>
+              <div v-for="order in orders" :key="order.id" class="bg-white card mb-4 order-list shadow-sm">
+                <div class="gold-members p-4">
+                  <router-link :to="`/orders/${order.id}`">
+                    <div class="media">
+                      <img class="mr-4" :src="order.chef.image_url" alt="Generic placeholder image" />
+                      <div class="media-body">
+                        <span class="float-right text-info">
+                          Completed on {{ $parent.formattedDate(order.ready_time) }}&nbsp;
+                          <i class="icofont-check-circled text-success"></i>
+                        </span>
+                        <h6 class="mb-2 text-black">
+                          Order from Chef&nbsp;
+                          {{ order.chef.first_name }}
+                        </h6>
+                        <p class="text-gray mb-1">
+                          <i class="icofont-location-arrow"></i>
+                          {{ order.chef.address.city }}, {{ order.chef.address.state }}
+                        </p>
+                        <p class="text-gray mb-3">
+                          <i class="icofont-list"></i>
+                          &nbsp;ORDER #{{ order.id }}&nbsp;
+                          <i class="icofont-clock-time ml-2"></i>
+                          &nbsp;{{ $parent.formattedDate(order.created_at) }}
+                        </p>
+                        <p class="text-dark">
+                          <span v-for="(dish, index) in order.dishes" :key="dish.id">
+                            <span v-if="index != 0">,&nbsp;</span>
+                            {{ dish.name }} x {{ dish.quantity }}
+                          </span>
+                        </p>
+                        <hr />
+                        <p class="mb-0 text-black text-primary pt-2">
+                          <span class="text-black font-weight-bold">
+                            &nbsp;Total Paid:
+                          </span>
+                          &nbsp;{{ order.total | currency }}
+                        </p>
+                      </div>
+                    </div>
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -160,11 +207,18 @@ export default {
       currentDishQuantity: 1,
       errors: [],
       newImage: "",
+      orders: [],
     };
   },
   created: function() {
     axios.get(`/api/users/${this.$route.params.id}`).then(response => {
       this.user = response.data;
+
+      if (!this.user.chef) {
+        axios.get("/api/orders").then(response => {
+          this.orders = response.data;
+        });
+      }
     });
   },
   methods: {
