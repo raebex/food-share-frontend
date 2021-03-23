@@ -41,7 +41,9 @@
                 <h6>Hours</h6>
                 <p v-for="hour in user.preorder_hours" :key="hour.id" class="mb-1 clearfix">
                   <span class="float-left">{{ hour.day_of_week }}: </span>
-                  <span class="float-right">{{ $parent.formattedTime(hour.open) }} - {{ $parent.formattedTime(hour.close) }}</span>
+                  <span class="float-right">
+                    {{ $parent.formattedTime(hour.open) }} - {{ $parent.formattedTime(hour.close) }}
+                  </span>
                 </p>
                 <hr />
               </div>
@@ -61,9 +63,7 @@
                 <div v-for="dish in user.dishes" :key="dish.id" class="col-md-4 col-sm-6 mb-4">
                   <div class="list-card bg-white h-100 rounded overflow-hidden position-relative shadow-sm">
                     <div class="list-card-image">
-                      <a href="#">
-                        <img :src="dish.image_url" class="img-fluid item-img" />
-                      </a>
+                      <img :src="dish.image_url" class="img-fluid item-img" />
                     </div>
                     <div class="p-3 position-relative">
                       <div class="list-card-body">
@@ -74,11 +74,19 @@
                             <button
                               class="btn btn-outline-secondary btn-sm"
                               v-if="ownProfile()"
-                              v-on:click="showUpdateDish(dish)"
+                              data-toggle="modal"
+                              data-target="#dishEditModal"
+                              v-on:click="showDish(dish)"
                             >
                               Edit
                             </button>
-                            <button class="btn btn-outline-secondary btn-sm" v-else v-on:click="showDish(dish)">
+                            <button
+                              v-else
+                              class="btn btn-outline-secondary btn-sm"
+                              data-toggle="modal"
+                              data-target="#dishShowModal"
+                              v-on:click="showDish(dish)"
+                            >
                               More info
                             </button>
                           </span>
@@ -139,60 +147,112 @@
       </div>
     </section>
 
-    <dialog v-if="user.chef && ownProfile()">
-      <form method="dialog">
-        <h3>Edit Dish</h3>
-        <ul>
-          <li class="text-danger" v-for="error in errors" v-bind:key="error">
-            {{ error }}
-          </li>
-        </ul>
-        <img :src="currentDish.image_url" alt="" />
-        <div>
-          Image: <input type="file" v-on:change="setFile($event)" ref="fileInput" />
+    <div v-if="user.chef && ownProfile()">
+      <div
+        class="modal fade"
+        id="dishEditModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="dishEditModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="dishEditModalLabel">Edit Dish</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <ul>
+                <li class="text-danger" v-for="error in errors" v-bind:key="error">
+                  {{ error }}
+                </li>
+              </ul>
+              <img class="img-fluid mb-4" :src="currentDish.image_url" alt="" />
+              <form v-on:submit.prevent="updateDish(currentDish)">
+                <div class="form-group">
+                  <label for="inputImage">Image:</label>
+                  <br />
+                  <input id="inputImage" type="file" v-on:change="setFile($event)" ref="fileInput" />
+                </div>
+                <div class="form-group">
+                  <label for="inputName">Name:</label>
+                  <input class="form-control" id="inputName" type="text" v-model="currentDish.name" />
+                </div>
+                <div class="form-group">
+                  <label>Price:</label>
+                  <input class="form-control" id="inputPrice" type="text" v-model="currentDish.price" />
+                </div>
+                <div class="form-group">
+                  <label for="inputDescription">Description:</label>
+                  <textarea id="inputDescription" class="form-control" v-model="currentDish.description"></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="inputPortion">Portion Size:</label>
+                  <input id="inputPortion" class="form-control" type="text" v-model="currentDish.portion_size" />
+                </div>
+                <div class="form-check mb-5">
+                  <input id="inputFeatured" type="checkbox" class="form-check-input" v-model="currentDish.featured" />
+                  <label class="form-check-label" for="inputFeatured">Featured</label>
+                </div>
+                <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Close</button>
+                <button class="btn btn-outline-primary mr-2" v-on:click="destroyDish(currentDish)">Delete</button>
+                <input type="submit" class="btn btn-primary" value="Save" />
+              </form>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Name:</label>
-          <input type="text" v-model="currentDish.name" />
-        </div>
-        <div class="form-group">
-          <label>Price:</label>
-          <input type="text" v-model="currentDish.price" />
-        </div>
-        <div class="form-group">
-          <label>Description:</label>
-          <textarea v-model="currentDish.description"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Portion Size:</label>
-          <input type="text" v-model="currentDish.portion_size" />
-        </div>
-        <div class="form-group">
-          <label>Featured</label>
-          <input type="checkbox" class="form-control" v-model="currentDish.featured" />
-        </div>
-        <button v-on:click="updateDish(currentDish)">Save</button>
-        <button v-on:click="destroyDish(currentDish)">Delete</button>
-        <button>Close</button>
-      </form>
-    </dialog>
+      </div>
+    </div>
 
-    <dialog v-else>
-      <form method="dialog">
-        <h3>{{ currentDish.name }}</h3>
-        <img :src="currentDish.image_url" :alt="currentDish.name" />
-        <p>{{ currentDish.price | currency }}</p>
-        <p>{{ currentDish.description }}</p>
-        <p>Portion size: {{ currentDish.portion_size }}</p>
-        <p>Quantity:</p>
-        <input type="number" v-model="currentDishQuantity" :min="1" inline controls />
-        <button v-if="$parent.isLoggedIn()" v-on:click="addToCart(currentDish)">Add to Cart</button>
-        <button v-else>
-          <router-link to="/login">Add to Cart</router-link>
-        </button>
-        <button>Close</button>
-      </form>
-    </dialog>
+    <div v-else>
+      <div
+        class="modal fade"
+        id="dishShowModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="dishShowModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="dishShowModalLabel">{{ currentDish.name }}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <img class="img-fluid mb-4" :src="currentDish.image_url" :alt="currentDish.name" />
+              <h6>{{ currentDish.price | currency }}</h6>
+              <p>{{ currentDish.description }}</p>
+              <p>Portion size: {{ currentDish.portion_size }}</p>
+              <p>Quantity:</p>
+              <span class="count-number">
+                <button v-on:click="currentDishQuantity--" class="btn btn-outline-secondary btn-sm left dec">
+                  <i class="icofont-minus"></i>
+                </button>
+                <input class="count-number-input" type="text" :value="currentDishQuantity" />
+                <button v-on:click="currentDishQuantity++" class="btn btn-outline-secondary btn-sm right inc">
+                  <i class="icofont-plus"></i>
+                </button>
+              </span>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button class="btn btn-primary" v-if="$parent.isLoggedIn()" v-on:click="addToCart(currentDish)">
+                Add to Cart
+              </button>
+              <button class="btn btn-primary" v-else>
+                <router-link to="/login">Add to Cart</router-link>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -232,11 +292,6 @@ export default {
     },
     showDish: function(dish) {
       this.currentDish = dish;
-      document.querySelector("dialog").showModal();
-    },
-    showUpdateDish: function(dish) {
-      this.currentDish = dish;
-      document.querySelector("dialog").showModal();
     },
     updateDish: function(dish) {
       var formData = new FormData();
@@ -252,6 +307,7 @@ export default {
           console.log("Dish updated.", response.data);
           var index = this.user.dishes.indexOf(dish);
           this.user.dishes[index].image_url = response.data.image_url;
+          // $("#dishEditModal").modal("hide");
         })
         .catch(error => {
           console.log(error.response.data.errors);
@@ -264,6 +320,7 @@ export default {
           console.log(response.data);
           var index = this.user.dishes.indexOf(dish);
           this.user.dishes.splice(index, 1);
+          // $("#dishEditModal").modal("hide");
         })
         .catch(error => {
           console.log(error);
@@ -279,6 +336,7 @@ export default {
         .post("api/carted_dishes", params)
         .then(response => {
           console.log("Dish added to cart!", response.data);
+          // $("#dishShowModal").modal("hide");
         })
         .catch(error => {
           console.log(error.response.data.errors);
