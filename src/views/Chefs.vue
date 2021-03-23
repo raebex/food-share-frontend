@@ -2,13 +2,17 @@
   <div class="chefs">
     <section class="section pt-5 pb-5 products-listing">
       <div class="container">
-        <div class="owl-carousel owl-carousel-category owl-theme list-cate-page mb-4 d-flex">
-          <div v-for="cuisine in cuisines" :key="cuisine.id" class="item">
-            <div class="osahan-category-item">
-              <a href="#">
-                <img class="img-fluid" src="img/list/1.png" alt="" />
-                <h6>{{ cuisine.name }}</h6>
-              </a>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="owl-carousel owl-carousel-category owl-theme list-cate-page mb-5">
+              <div v-for="cuisine in cuisines" :key="cuisine.id" class="item">
+                <a v-on:click="cuisineFilter = cuisine.name" href="#">
+                  <div class="osahan-category-item">
+                    <img class="img-fluid" src="/img/list/1.png" alt="" />
+                    <h6>{{ cuisine.name }}</h6>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -68,29 +72,11 @@
         </div>
       </div>
     </section>
-
-    <!-- <input
-      type="search"
-      id="form1"
-      class="form-control form-control-lg"
-      placeholder="Search by cuisine"
-      list="cuisineList"
-      v-model="cuisineFilter"
-    />
-
-    <datalist id="cuisineList">
-      <option v-for="cuisine in cuisines" :key="cuisine.id">{{ cuisine.name }}</option>
-    </datalist> -->
   </div>
 </template>
 
-<style scoped>
-.item {
-  width: 100px;
-}
-</style>
-
 <script>
+/* global $ */
 import axios from "axios";
 import Vue2Filters from "vue2-filters";
 import moment from "moment";
@@ -130,6 +116,7 @@ export default {
     getCuisines: function() {
       axios.get("/api/cuisines").then(response => {
         this.cuisines = response.data;
+        this.initCarousel();
       });
     },
     populatePreorderDays: function() {
@@ -147,6 +134,31 @@ export default {
         this.preorderDays.push(day);
         index += 1;
       }
+    },
+    initCarousel: function() {
+      $(document).ready(function() {
+        $(".owl-carousel").owlCarousel({
+          responsive: {
+            0: {
+              items: 3,
+            },
+            600: {
+              items: 4,
+            },
+            1000: {
+              items: 6,
+            },
+            1200: {
+              items: 8,
+            },
+          },
+          loop: true,
+          lazyLoad: true,
+          dots: false,
+          nav: true,
+          navText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"],
+        });
+      });
     },
   },
 };
