@@ -339,7 +339,7 @@ export default {
         .post("api/carted_dishes", params)
         .then(response => {
           console.log("Dish added to cart!", response.data);
-          // $("#dishShowModal").modal("hide");
+          $("#dishShowModal").modal("hide");
         })
         .catch(error => {
           console.log(error.response.data.errors);
