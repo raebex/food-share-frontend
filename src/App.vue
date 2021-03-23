@@ -74,9 +74,11 @@ export default {
     axios.get("api/carted_dishes").then(response => {
       var cartedDishes = response.data.cart;
 
-      cartedDishes.forEach(dish => {
-        this.cartNumber += dish.quantity;
-      });
+      if (cartedDishes) {
+        cartedDishes.forEach(dish => {
+          this.cartNumber += dish.quantity;
+        });
+      }
     });
   },
   methods: {
