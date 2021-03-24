@@ -1,39 +1,33 @@
 <template>
   <div class="users-show" v-if="Object.keys(user).length">
-    <section class="restaurant-detailed-banner">
-      <div class="text-center">
-        <img class="img-fluid cover" src="/img/mall-dedicated-banner.png" />
-      </div>
-      <div class="restaurant-detailed-header">
-        <div class="container">
-          <div class="row d-flex align-items-center">
-            <div class="col-sm-12 col-md-8">
-              <div class="restaurant-detailed-header-left">
-                <img class="img-fluid mr-3 float-left" alt="osahan" :src="user.image_url" />
-                <h2 class="text-white">{{ user.first_name }} {{ user.last_name }}</h2>
-                <p class="text-white mb-1">
-                  <i class="icofont-location-pin"></i>
-                  {{ user.address.city }}, {{ user.address.state }}
-                </p>
-                <p v-if="user.chef" class="text-white mb-0">
-                  <i class="icofont-food-cart"></i>
-                  <span v-for="(cuisine, index) in user.cuisines" :key="index">
-                    <span v-if="index != 0">,&nbsp;</span>
-                    {{ cuisine.name }}
-                  </span>
-                </p>
-              </div>
+    <section class="breadcrumb-osahan pt-5 pb-5 bg-dark position-relative">
+      <div class="container">
+        <div class="row d-flex align-items-center">
+          <div class="col-sm-12 col-md-8">
+            <div class="restaurant-detailed-header-left">
+              <img class="img-fluid mr-3 float-left" alt="osahan" :src="user.image_url" />
+              <h2 class="text-white">{{ user.first_name }} {{ user.last_name }}</h2>
+              <p class="text-white mb-1">
+                <i class="icofont-location-pin"></i>
+                {{ user.address.city }}, {{ user.address.state }}
+              </p>
+              <p v-if="user.chef" class="text-white mb-0">
+                <i class="icofont-food-cart"></i>
+                <span v-for="(cuisine, index) in user.cuisines" :key="index">
+                  <span v-if="index != 0">,&nbsp;</span>
+                  {{ cuisine.name }}
+                </span>
+              </p>
             </div>
-            <div class="col-sm-12 col-md-4">
-              <router-link class="float-right" v-if="ownProfile()" :to="`/users/${user.id}/edit`">
-                <button class="btn btn-primary">Edit Profile</button>
-              </router-link>
-            </div>
+          </div>
+          <div class="col-sm-12 col-md-4">
+            <router-link class="float-right" v-if="ownProfile()" :to="`/users/${user.id}/edit`">
+              <button class="btn btn-primary">Edit Profile</button>
+            </router-link>
           </div>
         </div>
       </div>
     </section>
-
     <section class="pt-2 pb-2 mt-4 mb-4">
       <div class="container">
         <div class="row">
