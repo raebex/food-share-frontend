@@ -1,7 +1,7 @@
 <template>
   <div class="users-edit" v-if="Object.keys(user).length">
     <div class="container">
-      <form v-on:submit.prevent="update()">
+      <form v-on:submit.prevent>
         <div class="row mt-4 mb-5">
           <div class="col-md-7 mb-5 pr-5">
             <h3>Edit Profile</h3>
@@ -67,7 +67,7 @@
               <label>Zip Code:</label>
               <input type="text" class="form-control" v-model="user.address.zip_code" />
             </div>
-            <input type="submit" class="btn btn-primary btn-lg mr-4" value="Save" />
+            <button class="btn btn-primary btn-lg mr-4" v-on:click="update()" value="Save">Save</button>
             <button class="btn btn-lg btn-outline-primary" v-on:click="destroyProfile()">Delete Profile</button>
           </div>
           <div v-if="user.chef" class="col-md-5">
@@ -232,6 +232,7 @@ export default {
         .patch(`/api/users/${this.user.id}`, formData)
         .then(response => {
           console.log(response.data);
+          this.$router.push(`/users/${this.user.id}`);
         })
         .catch(error => {
           this.errors = error.response.data.errors;
