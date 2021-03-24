@@ -21,6 +21,7 @@ export default {
         var newOrder = response.data;
         localStorage.removeItem("orderDay");
         localStorage.removeItem("orderDate");
+        this.$parent.cartNumber = 0;
         this.$router.push(`/orders/success?order_id=${newOrder.id}`);
       })
       .catch(error => {

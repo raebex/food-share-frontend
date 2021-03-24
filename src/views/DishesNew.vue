@@ -68,10 +68,7 @@ export default {
     createDish: function() {
       var formData = new FormData();
       formData.append("name", this.name);
-
-      if (this.image_url) {
-        formData.append("image_url", this.imageUrl);
-      }
+      formData.append("image_url", this.imageUrl);
       formData.append("price", this.price);
       formData.append("description", this.description);
       formData.append("portion_size", this.portionSize);
