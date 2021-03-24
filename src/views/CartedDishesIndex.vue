@@ -258,7 +258,7 @@ export default {
       var totalNumHours = Math.abs(timeRange._data.hours);
 
       while (index < totalNumHours) {
-        var nextHour = moment(today.open)
+        var nextHour = moment(today.open.replace("Z", ""))
           .add(index, "hours")
           .format("h:mmA");
         this.hours.push(nextHour);
