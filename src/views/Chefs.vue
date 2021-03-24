@@ -11,7 +11,7 @@
                     class="osahan-category-item"
                     :class="cuisineFilter === cuisine.name ? 'selected-cuisine-btn' : ''"
                   >
-                    <img class="img-fluid" src="/img/list/1.png" alt="" />
+                    <img class="img-fluid" :src="`/img/cuisines/${cuisine.name}.svg`" alt="" />
                     <h6>{{ cuisine.name }}</h6>
                   </div>
                 </a>
@@ -86,6 +86,12 @@
 .nav-osahan-pic {
   width: 60px;
   height: 60px;
+}
+
+.osahan-category-item img {
+  width: 50px;
+  height: 60px;
+  box-shadow: none !important;
 }
 </style>
 
