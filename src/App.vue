@@ -49,7 +49,7 @@
               <router-link class="nav-link" to="/cart">
                 <i class="fas fa-shopping-basket"></i>
                 Cart
-                <span class="badge badge-success">{{ cartNumber }}</span>
+                <span v-if="cartNumber > 0" class="badge badge-success">{{ cartNumber }}</span>
               </router-link>
             </li>
           </ul>
