@@ -249,11 +249,11 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button class="btn btn-primary" v-if="$parent.isLoggedIn()" v-on:click="addToCart(currentDish)">
+              <button
+                class="btn btn-primary"
+                v-on:click="$parent.isLoggedIn() ? addToCart(currentDish) : redirectToLogin()"
+              >
                 Add to Cart
-              </button>
-              <button class="btn btn-primary" v-else>
-                <router-link to="/login">Add to Cart</router-link>
               </button>
             </div>
           </div>
@@ -320,6 +320,10 @@ export default {
         .catch(error => {
           console.log(error.response.data.errors);
         });
+    },
+    redirectToLogin: function() {
+      $("#dishShowModal").modal("hide");
+      this.$router.push("/login");
     },
     destroyDish: function(dish) {
       axios
