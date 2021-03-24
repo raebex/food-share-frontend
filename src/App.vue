@@ -45,7 +45,7 @@
                 </router-link>
               </div>
             </li>
-            <li v-if="isLoggedIn() && !isChef()" class="nav-item dropdown dropdown-cart">
+            <li v-if="isLoggedIn() && isChef() === 'false'" class="nav-item dropdown dropdown-cart">
               <router-link class="nav-link" to="/cart">
                 <i class="fas fa-shopping-basket"></i>
                 Cart
