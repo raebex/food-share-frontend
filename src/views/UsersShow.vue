@@ -245,7 +245,6 @@
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               <button
                 class="btn btn-primary"
-                v-if="$parent.isChef() === 'false'"
                 v-on:click="$parent.isLoggedIn() ? addToCart(currentDish) : redirectToLogin()"
               >
                 Add to Cart
