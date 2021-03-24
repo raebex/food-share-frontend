@@ -6,8 +6,11 @@
           <div class="col-md-12">
             <div class="owl-carousel owl-carousel-category owl-theme list-cate-page mb-5">
               <div v-for="cuisine in cuisines" :key="cuisine.id" class="item">
-                <a v-on:click="cuisineFilter = cuisine.name" href="#">
-                  <div class="osahan-category-item">
+                <a v-on:click="toggleCuisineFilter(cuisine.name)" href="#">
+                  <div
+                    class="osahan-category-item"
+                    :class="cuisineFilter === cuisine.name ? 'selected-cuisine-btn' : ''"
+                  >
                     <img class="img-fluid" src="/img/list/1.png" alt="" />
                     <h6>{{ cuisine.name }}</h6>
                   </div>
@@ -75,6 +78,12 @@
   </div>
 </template>
 
+<style scoped>
+.selected-cuisine-btn {
+  border: 1px solid #ff3008;
+}
+</style>
+
 <script>
 /* global $ */
 import axios from "axios";
@@ -118,6 +127,13 @@ export default {
         this.cuisines = response.data;
         this.initCarousel();
       });
+    },
+    toggleCuisineFilter: function(cuisine) {
+      if (this.cuisineFilter === cuisine) {
+        this.cuisineFilter = "";
+      } else {
+        this.cuisineFilter = cuisine;
+      }
     },
     populatePreorderDays: function() {
       var index = 0;
