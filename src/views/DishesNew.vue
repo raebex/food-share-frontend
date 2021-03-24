@@ -68,7 +68,10 @@ export default {
     createDish: function() {
       var formData = new FormData();
       formData.append("name", this.name);
-      formData.append("image_url", this.imageUrl);
+
+      if (this.image_url) {
+        formData.append("image_url", this.imageUrl);
+      }
       formData.append("price", this.price);
       formData.append("description", this.description);
       formData.append("portion_size", this.portionSize);
@@ -78,7 +81,7 @@ export default {
         .post("/api/dishes", formData)
         .then(response => {
           console.log(response.data);
-          this.$router.push(`/users/${this.user.id}`);
+          this.$router.push(`/users/${this.$parent.getUserId()}`);
         })
         .catch(error => {
           console.log(error.response.data.errors);
