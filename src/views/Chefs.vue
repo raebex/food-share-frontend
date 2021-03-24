@@ -53,7 +53,7 @@
                 </div>
                 <div class="p-3 position-relative">
                   <div class="list-card-body d-flex align-items-start">
-                    <img :src="chef.image_url" class="nav-osahan-pic rounded-pill mt-1" />
+                    <img :src="chef.image_url" class="nav-osahan-pic rounded-pill mr-3" />
                     <div>
                       <h6 class="mb-1">
                         <span class="text-black">
@@ -81,6 +81,11 @@
 <style scoped>
 .selected-cuisine-btn {
   border: 1px solid #ff3008;
+}
+
+.nav-osahan-pic {
+  width: 60px;
+  height: 60px;
 }
 </style>
 
