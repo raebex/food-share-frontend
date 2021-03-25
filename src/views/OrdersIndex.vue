@@ -2,7 +2,7 @@
   <div class="orders-index">
     <div class="container shadow-sm bg-white p-4 h-100 mt-4">
       <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-        <h4 class="font-weight-bold mt-0 mb-4">Past Orders</h4>
+        <h4 class="font-weight-bold mt-0 mb-4">Orders</h4>
         <div v-for="order in orders" :key="order.id" class="bg-white card mb-4 order-list shadow-sm">
           <div class="gold-members p-4">
             <router-link :to="`/orders/${order.id}`">
