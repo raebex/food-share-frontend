@@ -7,7 +7,7 @@ import Vue2Filters from "vue2-filters";
 Vue.use(Vue2Filters)
 
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-axios.defaults.baseURL = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "/";
+axios.defaults.baseURL = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://radiant-meadow-81571.herokuapp.com/";
 
 var jwt = localStorage.getItem("jwt");
 if (jwt) {
